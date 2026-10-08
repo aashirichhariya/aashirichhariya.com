@@ -674,118 +674,7 @@ main > .frontispiece:first-child {
   }
 }
 
-/* ── 12. The specimen ── */
-.specimen { border-top: 1px solid var(--hairline); }
-
-.specimen-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 56px;
-  align-items: start;
-}
-
-.spec-label {
-  font-family: var(--mono);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--petrol);
-  margin: 0 0 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.spec-note {
-  margin: 22px 0 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 44ch;
-}
-
-/* colour */
-.spec-swatches { list-style: none; margin: 0; padding: 0; }
-.spec-swatches li {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: 14px;
-  padding-block: 9px;
-  border-bottom: 1px solid var(--hairline-soft);
-}
-.spec-chip {
-  width: 22px; height: 22px;
-  border: 1px solid var(--hairline);
-}
-.spec-chip-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.spec-chip-name { font-size: 13px; color: var(--ink); }
-.spec-chip-token {
-  font-family: var(--mono);
-  font-size: 9.5px;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-}
-.spec-chip-meta { display: flex; flex-direction: column; gap: 2px; text-align: right; }
-.spec-chip-use {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--petrol-mid);
-}
-.spec-chip-val { font-family: var(--mono); font-size: 9.5px; color: var(--muted); }
-.spec-chip-cr {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-soft);
-  min-width: 46px;
-  text-align: right;
-}
-
-/* type */
-.spec-scale { list-style: none; margin: 0; padding: 0; }
-.spec-scale li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 20px;
-  padding-block: 12px;
-  border-bottom: 1px solid var(--hairline-soft);
-}
-.spec-scale-label {
-  font-family: var(--mono);
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  flex: none;
-}
-.spec-scale-sample { color: var(--ink); line-height: 1; }
-
-/* measure */
-.spec-measures { list-style: none; margin: 0; padding: 0; }
-.spec-measures li { padding-block: 12px; border-bottom: 1px solid var(--hairline-soft); }
-.spec-measure-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 9px;
-}
-.spec-measure-name { font-size: 13px; color: var(--ink); }
-.spec-measure-val { font-family: var(--mono); font-size: 10px; color: var(--petrol-mid); }
-.spec-measure-bar {
-  display: block;
-  height: 3px;
-  max-width: 100%;
-  background: var(--petrol);
-  opacity: 0.55;
-}
-
-@media (max-width: 1000px) {
-  .specimen-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
-  .spec-note { max-width: none; }
-}
+@media (max-width: 1000px) {}
 
 /* ── 13. The entry, re-set as a wall label ──
    Supersedes the column rules in §5. Prose on the left at a readable
@@ -1197,24 +1086,14 @@ main > .frontispiece:first-child { padding-top: 0; }
 @media (max-width: 768px) { :root { --pad: var(--gutter-sm); } }
 
 /* Keep the hover wash inside whichever gutter is current. */
-:root { --bleed: calc(var(--pad) * 0.4); }
-
-main > .canvas.clients,
-main > .canvas.specimen,
-main > .inquiries.canvas { border-top: 0; border-bottom: 0; }
-
-main > .canvas.specimen::before,
-main > .inquiries.canvas::before,
-main > .canvas.clients::after {
+:root { --bleed: calc(var(--pad) * 0.4); }main > .canvas.clients, main > .inquiries.canvas { border-top: 0; border-bottom: 0; }main > .inquiries.canvas::before, main > .canvas.clients::after {
   content: '';
   position: absolute;
   left: var(--pad);
   right: var(--pad);
   height: 1px;
   background: var(--hairline);
-}
-main > .canvas.specimen::before,
-main > .inquiries.canvas::before { top: 0; }
+}main > .inquiries.canvas::before { top: 0; }
 main > .canvas.clients::after { bottom: 0; }
 
 /* The section head already draws the rule under the heading; the
@@ -1229,14 +1108,6 @@ main > .canvas.clients::after { bottom: 0; }
    already closed off above them. The section border is the repeating
    element, so the cover gives up its own. */
 .case-head { border-bottom: 0; margin-bottom: 0; }
-
-/* The specimen was drawing a border under all six swatch rows AND a
-   border around every chip: twelve lines in a block six items tall.
-   The chip keeps its border (it has to, to show a pale colour against
-   pale paper); the rows lose theirs and are held by rhythm instead. */
-.spec-swatches li { border-bottom: 0; padding-block: 7px; }
-.spec-scale li:last-child,
-.spec-measures li:last-child { border-bottom: 0; }
 
 /* The static edition staggered the critiques deliberately
    (`.crit:nth-child(even) { align-self: flex-end }`). In a two-up
@@ -1272,44 +1143,9 @@ main > .canvas.clients::after { bottom: 0; }
   --t-h2:      clamp(30px, 3.1vw, 42px);  /* entry titles, ledes            */
   --t-h1:      clamp(38px, 5vw, 60px);    /* page + section titles          */
   --t-display: clamp(44px, 6.2vw, 82px);  /* case titles                    */
-}
-
-/* ── labels: every mono uppercase field name ── */
-.entry-meta dt,
-.record-extras dt,
-.case-fact dt,
-.brief-facts dt,
-.case-section-label,
-.spec-label,
-.spec-chip-token,
-.spec-chip-use,
-.spec-scale-label,
-.clients > .label,
-.fp-meta .item .label,
-.entry-sector,
-.record-org,
-.inq-channel .label      { font-size: var(--t-label); }
-
-/* ── mono values ── */
-.entry-year,
-.entry-client,
-.record-when,
-.client-name,
-.section-head .range,
-.case-eyebrow,
-.crit-author .role,
-.spec-measure-val,
-.spec-chip-val,
-.spec-chip-cr,
-.inq-status              { font-size: var(--t-mono); }
-
-/* ── captions ── */
-.spec-note,
-.spec-chip-name,
-.spec-measure-name,
-.entry-meta dd,
-.outcome-label,
-.inq-channel .sub        { font-size: var(--t-cap); }
+}/* ── labels: every mono uppercase field name ── */
+.entry-meta dt, .record-extras dt, .case-fact dt, .brief-facts dt, .case-section-label, .clients > .label, .fp-meta .item .label, .entry-sector, .record-org, .inq-channel .label { font-size: var(--t-label); }/* ── mono values ── */
+.entry-year, .entry-client, .record-when, .client-name, .section-head .range, .case-eyebrow, .crit-author .role, .inq-status { font-size: var(--t-mono); }.entry-meta dd, .outcome-label, .inq-channel .sub { font-size: var(--t-cap); }
 
 /* ── secondary body ── */
 .record-body,
@@ -1362,32 +1198,7 @@ main > .canvas.clients::after { bottom: 0; }
    ochre-deep is 8.66:1 on paper and already a monograph token; umber
    is 5.39:1, which clears AA for small text, where most of it lives.
    ============================================================ */
-:root { --umber: #7A5C48; }
-
-.entry-meta dt,
-.record-extras dt,
-.case-fact dt,
-.brief-facts dt,
-.case-section-label,
-.spec-label,
-.clients > .label,
-.fp-meta .item .label,
-.inq-channel .label      { color: var(--ochre-deep); }
-
-.section-head .range,
-.entry-sector,
-.record-org,
-.case-eyebrow,
-.crit-author .role,
-.spec-chip-use,
-.spec-scale-label,
-.spec-chip-token         { color: var(--umber); }
-
-.entry-year,
-.record-when,
-.outcome-stat,
-.spec-measure-val,
-.spec-chip-cr            { color: var(--petrol); }
+:root { --umber: #7A5C48; }.entry-meta dt, .record-extras dt, .case-fact dt, .brief-facts dt, .case-section-label, .clients > .label, .fp-meta .item .label, .inq-channel .label { color: var(--ochre-deep); }.section-head .range, .entry-sector, .record-org, .case-eyebrow, .crit-author .role { color: var(--umber); }.entry-year, .record-when, .outcome-stat { color: var(--petrol); }
 
 /* The client name is the row's label, not one of its figures; it was
    sharing petrol with the year, so the two read as the same kind of
@@ -1397,13 +1208,7 @@ main > .canvas.clients::after { bottom: 0; }
 /* Stacked, each specimen column's label underline became a second
    full-width hairline just below the section head. One rule per
    column instead, carried by the column rather than the label. */
-@media (max-width: 1000px) {
-  .spec-label { border-bottom: 0; padding-bottom: 0; }
-  .spec-col + .spec-col {
-    border-top: 1px solid var(--hairline);
-    padding-top: 36px;
-  }
-}
+@media (max-width: 1000px) {}
 
 /* §24. The chrome and footer were never in the audit, because that
    swept `main` only. They were running 10px mono, under the floor. */
@@ -1509,15 +1314,7 @@ main > .canvas.clients::after { bottom: 0; }
    reaches the middle of the screen, so nothing is still moving while
    it is being read. */
 @supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .entry,
-    .crit-pair .crit,
-    .spec-col,
-    .about-movement,
-    .record-row,
-    .case-section,
-    .clients,
-    .section-head {
+  @media (prefers-reduced-motion: no-preference) {.entry, .crit-pair .crit, .about-movement, .record-row, .case-section, .clients, .section-head {
       animation-name: lift-in;
       animation-duration: auto;
       animation-timing-function: linear;
@@ -1936,26 +1733,21 @@ main > .inquiries { padding-bottom: var(--section-py); }
 .fp-meta .item .label    { margin-bottom: var(--sp-2); }
 .inq-channel             { gap: var(--sp-2); }
 .inq-channel .sub        { margin-top: 0; }
-.spec-measure-head       { margin-bottom: var(--sp-2); }
 .outcome-stat            { margin-bottom: var(--sp-3); }
 .record-extras dt        { padding-top: var(--sp-1); }
-.spec-chip-text,
-.spec-chip-meta          { gap: var(--sp-1); }
 
 /* Rule 5 — collapse the 22–30 and 36–56 clusters onto steps. */
 .section-head     { padding-bottom: var(--sp-5); }
-.spec-note        { margin-top: var(--sp-4); }
 .inq-channels     { padding-top: var(--sp-5); gap: var(--sp-6) var(--sp-5); }
 .outcomes-grid    { gap: var(--sp-6); }
 .case-facts       { gap: var(--sp-5) var(--sp-6); }
 .inq-statement    { margin-bottom: var(--sp-7); }
-.specimen-grid    { gap: var(--sp-7) var(--sp-6); }
 .record-row       { padding-block: var(--sp-5); }
 .record-extras    { padding-top: var(--sp-5); }
 .fp-role          { margin-bottom: var(--sp-4); }
 .page .entry-nav  { margin-top: var(--sp-7); padding-top: var(--sp-5); }
 .entry-link       { padding-block: var(--sp-5); }
-@media (max-width: 1000px) { .spec-col + .spec-col { padding-top: var(--sp-5); } }
+@media (max-width: 1000px) {}
 @media (max-width: 900px)  { .case-section { gap: var(--sp-3) var(--sp-6); } }
 @media (max-width: 860px)  {
   .about-movement { gap: var(--sp-4); }
@@ -2577,7 +2369,6 @@ main > .inquiries { padding-bottom: var(--section-py); }
    `clip` on body also clipped the page to a box and lost everything
    below the hero, so the original `hidden` stands. The real fix for
    the chopped glyphs is the clip-path slack in the keyframes above. */
-
 
 /* ============================================================
    §43. FOUR CORRECTIONS

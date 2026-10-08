@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Plate from '../components/Plate';
 import Contact from '../components/Contact';
-import Specimen from '../components/Specimen';
 import { Num, SectionTitle } from '../components/Type';
 import PinGate, { isUnlocked } from '../components/PinGate';
 import Crits from '../components/Crits';
@@ -90,8 +89,6 @@ const Home: React.FC = () => {
       <Crits />
 
     </section>
-
-    <Specimen />
 
     <Contact />
 
