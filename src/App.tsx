@@ -1,62 +1,47 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
-import Footer from './components/layout/Footer';
+
+import Chrome from './components/Chrome';
+import Footer from './components/Footer';
 import Home from './pages/Home';
-import CaseStudy from './pages/CaseStudy';
-import CoreAI from './pages/CoreAI';
-import './App.css';
+import Work from './pages/Work';
+import PlatePage from './pages/PlatePage';
+import About from './pages/About';
+import ContactPage from './pages/ContactPage';
+import NotFound from './pages/NotFound';
 
-// ScrollToTop component to ensure pages start at the top
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  
+import './styles/monograph.css';
+import './styles/react.css';
+
+const ScrollReset: React.FC = () => {
+  const { pathname, hash } = useLocation();
   useEffect(() => {
-    // Force scroll to top on route change and page refresh
-    window.scrollTo(0, 0);
-    
-    // Also handle page refresh specifically
-    const handleBeforeUnload = () => {
-      window.scrollTo(0, 0);
-    };
-    
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [pathname]);
-  
+    if (hash) {
+      const id = hash.slice(1);
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+      return;
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+  }, [pathname, hash]);
   return null;
-}
+};
 
-// Main App component with routes
-function AppContent() {
-  const location = useLocation();
-  
-  return (
-    <div className="App bg-black text-white min-h-screen">
-      <ScrollToTop />
-      <main>
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home />} />
-            <Route path="/projects/:id" element={<CaseStudy />} />
-            <Route path="/projects/coreai" element={<CoreAI />} />
-          </Routes>
-        </AnimatePresence>
-      </main>
-      <Footer />
-    </div>
-  );
-}
-
-function App() {
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
-}
+const App: React.FC = () => (
+  <Router>
+    <ScrollReset />
+    <Chrome />
+    <main id="top">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/work" element={<Work />} />
+        <Route path="/work/:id" element={<PlatePage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </main>
+    <Footer />
+  </Router>
+);
 
 export default App;

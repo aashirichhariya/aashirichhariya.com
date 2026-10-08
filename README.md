@@ -1,51 +1,46 @@
-<<<<<<< HEAD
 # aashirichhariya.com
-portfolio website
-=======
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Portfolio for Aashi Richhariya — Principal Design System Lead, Toronto.
 
-## Available Scripts
+React 19 · TypeScript · Framer Motion · React Router 7
 
-In the project directory, you can run:
+## Run
 
-### `npm start`
+```bash
+npm install
+npm start          # http://localhost:3000
+npm run build      # production bundle in build/
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Environment
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The chat assistant calls the Gemini API. Copy `.env.example` to `.env.local` and add a key:
 
-### `npm test`
+```
+REACT_APP_GEMINI_API_KEY=your-key
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**The key is inlined into the client bundle at build time and is readable by anyone who views source.**
+Before this goes live, move the call behind a serverless function that holds the key server-side and
+have the client POST to that instead. Treat any key used here as public.
 
-### `npm run build`
+## Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+src/
+  content.ts              all copy and project data — edit here, not in the pages
+  styles/tokens.css       design tokens: colour, type scale, space, motion
+  styles/pages.css        page and component styles
+  components/motion/      Reveal, Stagger, LineReveal, Magnetic, Counter, CursorGlow
+  components/layout/      Nav, Footer
+  pages/                  Home, Work, Clients, Talk
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Content lives in one file so copy never drifts between views. Animation primitives are shared so
+timing and easing stay consistent — both honour `prefers-reduced-motion`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Known work
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
->>>>>>> master
+- Create React App is deprecated and has had no security updates since 2023. Migrating to Vite is
+  roughly a half-hour mechanical change.
+- The Gemini key needs the serverless proxy described above.

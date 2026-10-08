@@ -1,0 +1,2112 @@
+/* ═════════════════════════════════════════════════════════════
+   AASHI RICHHARIYA — A Working Monograph
+   Shared stylesheet · Edition II · v.3
+   ═════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────
+   I. Tokens
+   ────────────────────────────────────── */
+:root {
+  /* Paper + ink.
+     Contrast audited against --paper (#F4F1EA), WCAG 2.1 relative luminance:
+       --ink        #1A1A1A            15.43:1  ✓ AAA
+       --ink-soft   #262320            13.86:1  ✓ AAA
+       --ink-faint  ≈#666563 composite  5.05:1  ✓ AA
+       --muted      #6B6660             5.04:1  ✓ AA  (kept — passes at every size used)
+       --ochre      #9A4B2A             5.45:1  ✓ AA
+       --ochre-deep #6E3318             8.66:1  ✓ AAA (focus rings)
+     --muted-light (#948D84) computed 2.91:1 — FAILS AA for text at any size and had
+     no non-text role, so it was removed rather than left as a trap. */
+  --paper:        #F4F1EA;
+  --paper-deep:   #ECE7DB;
+  --paper-soft:   #F8F6F0;
+  --ink:          #1A1A1A;
+  --ink-soft:     #262320;
+  --ink-faint:    rgba(26,26,26,0.65);
+  --muted:        #6B6660;
+  --hairline:     #D9D3C8;
+  --hairline-soft:#E5DFD3;
+  --ochre:        #9A4B2A;
+  --ochre-light:  #C9A082;
+  --ochre-deep:   #6E3318;
+  --ochre-wash:   rgba(154,75,42,0.08);
+
+  --serif: 'Fraunces', 'Times New Roman', serif;
+  --sans:  'DM Sans', 'Helvetica Neue', sans-serif;
+  --mono:  'JetBrains Mono', 'Courier New', monospace;
+
+  --ease:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-slow:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-page:  cubic-bezier(0.65, 0, 0.35, 1);
+
+  --rail:       80px;
+  --gutter:     80px;
+  --gutter-sm:  24px;
+
+  /* Consistent vertical rhythm — tightened in Edition II (SPEC §4.1):
+     evidence must arrive sooner. Line-height, text max-width and figure
+     padding are deliberately NOT compressed; line length was already right. */
+  --section-py:        112px;
+  --section-head-mb:   72px;
+  --plate-py:          88px;
+  --block-py:          56px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-feature-settings: "ss01", "ss02", "kern", "calt", "liga";
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+/* Paper grain */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.7;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 1;
+}
+
+main, header, footer, nav { position: relative; z-index: 2; }
+::selection { background: var(--ink); color: var(--paper); }
+a { color: inherit; }
+
+/* ──────────────────────────────────────
+   IV. Top chrome
+   ────────────────────────────────────── */
+.chrome {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px var(--gutter);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 300;
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.chrome > * { pointer-events: auto; }
+
+.chrome::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--paper) 0%, rgba(244,241,234,0.94) 70%, rgba(244,241,234,0) 100%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+
+.chrome.is-scrolled::after { opacity: 1; }
+
+.chrome .mark {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.chrome .breadcrumb {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.chrome .breadcrumb .sep { margin: 0 12px; opacity: 0.5; }
+
+.chrome .breadcrumb .here { color: var(--ink); }
+
+.chrome .nav { display: flex; gap: 36px; }
+
+.chrome .nav a {
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.3s var(--ease);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.chrome .nav a .idx {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.chrome .nav a:hover,
+.chrome .nav a:hover .idx { color: var(--ochre); }
+
+.chrome .meridian {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.chrome .back {
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.3s var(--ease);
+}
+
+.chrome .back:hover { color: var(--ochre); }
+.chrome .back .arrow { transition: transform 0.4s var(--ease); }
+.chrome .back:hover .arrow { transform: translateX(-4px); }
+
+/* The nav went from five links to six in Edition II (SPEC §3.2 adds Colophon).
+   Measured at 1440/1280/1180: mark 123 + nav 618 + meridian 148 + 2×80 gutter
+   = 1049 — fits. Below ~1025 it does not: the row overflowed the viewport and
+   body{overflow-x:hidden} silently CLIPPED it, so "IV Index", "V Colophon" and
+   "VI Inquire" were unreachable on every phone and on small laptops.
+
+   Two steps down, in order of what the page can afford to lose:
+     ≤1080px — the meridian is decoration; the nav is not. Drop it, tighten
+               the gutter and the nav gap. Six labelled links still fit on one
+               line down to 769px (measured: 706px of 769px used).
+     ≤768px  — one line is arithmetically impossible: the six labels need
+               ~414px of type and a 360px phone offers ~312px. Rather than
+               shrink mono-caps below 10px (SPEC §5 freezes that styling) or
+               hide the labels behind numerals nobody can decode, the nav
+               takes its own full-width row under the mark and wraps. Costs
+               ~34px of fixed header; the frontispiece already clears 128px. */
+@media (max-width: 1080px) {
+  .chrome { padding: 22px 40px; }
+  .chrome .meridian { display: none; }
+  .chrome .nav { gap: 22px; }
+}
+
+@media (max-width: 768px) {
+  .chrome {
+    padding: 14px var(--gutter-sm) 12px;
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .chrome .breadcrumb { display: none; }
+  .chrome .nav {
+    order: 2;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px 16px;
+    font-size: 10px;
+  }
+}
+
+/* ──────────────────────────────────────
+   V. Canvas + section foundations
+   ────────────────────────────────────── */
+.canvas {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .canvas { padding: 0 var(--gutter-sm); }
+}
+
+/* Every <section> in all seven documents also carries .canvas, and .canvas's
+   `padding: 0 var(--gutter)` shorthand outranks a bare element selector — so a
+   `section { padding: var(--section-py) 0 }` rule here never applied to
+   anything, and `section + section { padding-top: 0 }` had nothing to zero.
+   Both are removed rather than left looking load-bearing; nothing rendered
+   changes. Section rhythm is set explicitly by the blocks that own it
+   (.frontispiece, .colophon, .inquiries, .chapter-*) — which is where
+   --section-py is actually consumed. */
+section { position: relative; }
+
+.section-head {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 48px;
+  align-items: baseline;
+  padding-bottom: 28px;
+  margin-bottom: var(--section-head-mb);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.section-head .roman {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.section-head .title {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  font-size: clamp(32px, 4.4vw, 64px);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.section-head .range {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .section-head {
+    grid-template-columns: 1fr;
+    gap: 16px 24px;
+  }
+  .section-head .range { grid-column: 1 / 3; text-align: left; padding-top: 4px; }
+}
+
+/* ──────────────────────────────────────
+   VI. Reveal animations
+   Default is VISIBLE. The hidden state is gated behind .js-anim, which
+   script.js adds to <html> only after confirming IntersectionObserver
+   exists and prefers-reduced-motion is not set. The site must render
+   fully with JavaScript disabled.
+   ────────────────────────────────────── */
+.reveal { opacity: 1; }
+
+.js-anim .reveal {
+  opacity: 0;
+  transition: opacity 0.32s var(--ease-slow);
+}
+
+.js-anim .reveal.in { opacity: 1; }
+
+@media print {
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ──────────────────────────────────────
+   VII. Frontispiece (home)
+   ────────────────────────────────────── */
+/* Vertical padding is set LONGHAND here and in every .canvas block below.
+   A `padding: 176px 0 88px` shorthand also sets padding-left/right to 0, and
+   because .frontispiece/.chapter-* are later rules of equal specificity to
+   .canvas, that silently deleted the page gutter: the wordmark, the eyebrow's
+   ochre dot and the whole right-hand meta column sat hard against the viewport
+   edge (measured padding-left: 0px at 1440 and at 390). Longhand keeps
+   .canvas's `padding: 0 var(--gutter)` intact and changes nothing vertical. */
+.frontispiece {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  padding-top: 176px;
+  padding-bottom: 88px;
+  position: relative;
+}
+
+.frontispiece .margin-num {
+  position: absolute;
+  top: 176px;
+  left: 40px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.fp-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 80px;
+  align-items: end;
+  width: 100%;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 300;
+  margin-bottom: 56px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  /* Without these the flex row could not wrap, so at phone widths the browser
+     broke INSIDE the items instead: "A WORKING / MONOGRAPH" over two lines with
+     the "·" separators stranded at mid-height. Wrap between items, never
+     through one. */
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+
+/* Only the ticker is protected from breaking. A blanket nowrap here would make
+   any long prose item in an eyebrow one unbreakable line (it did exactly that
+   to pollin.html's "Healthcare · Fertility · Multi-product" at 320px). For
+   everything else flex-wrap is enough: an item that fits on a line now moves to
+   its own line instead of being squeezed and broken mid-word. */
+.eyebrow .year-ticker,
+.chapter-eyebrow .year-ticker { white-space: nowrap; }
+
+.eyebrow .dot {
+  width: 5px; height: 5px;
+  background: var(--ochre);
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.eyebrow .dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--ochre);
+  opacity: 0.4;
+  animation: ripple 2.4s var(--ease-soft) infinite;
+}
+
+.eyebrow .sep { color: var(--muted); margin: 0 4px; }
+
+@keyframes ripple {
+  0%   { transform: scale(0.6); opacity: 0.6; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.name {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-size: clamp(96px, 19vw, 280px);
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  color: var(--ink);
+  position: relative;
+  /* Reserves the band the surname is set into, so it can never collide with
+     the eyebrow or the tagline below. Scales on the same vw axis as .surname. */
+  padding-bottom: clamp(32px, 5.4vw, 78px);
+}
+
+.name .it { font-style: italic; font-weight: 200; letter-spacing: -0.05em; }
+
+/* The surname — real, visible, crawlable text (SPEC §5 / §3.1).
+
+   It is taken out of the inline flow deliberately. The display mark is
+   "Aashi." with the full stop at full display size; if the surname stayed
+   inline, that 280px full stop would be dragged onto the surname's line and
+   the wordmark would break. Absolute positioning keeps the wordmark exactly
+   as drawn and hangs the surname beneath it as a second, quieter line —
+   the museum plaque under the painting.
+
+   It is set upright (against the italic "shi"), one sixth of the display
+   size, tracked wide instead of tight, so it reads as a separate register
+   rather than as a shrunken piece of the same word. Nothing here hides it:
+   no clip, no zero size, no opacity, no off-screen offset. */
+.name .surname {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(18px, 3.2vw, 46px);
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.fp-right { padding-bottom: 20px; }
+
+.tagline {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(20px, 2.2vw, 30px);
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  max-width: 460px;
+  margin-bottom: 56px;
+}
+
+.tagline em {
+  font-style: normal;
+  color: var(--ochre);
+}
+
+.fp-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px 40px;
+  max-width: 460px;
+  border-top: 1px solid var(--hairline);
+  padding-top: 28px;
+}
+
+.fp-meta .item .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.fp-meta .item .val {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .fp-grid { grid-template-columns: 1fr; gap: 48px; }
+  .frontispiece { padding-top: 128px; padding-bottom: 64px; align-items: flex-start; }
+  .frontispiece .margin-num { display: none; }
+  .name { font-size: clamp(72px, 22vw, 160px); padding-bottom: clamp(28px, 6.4vw, 60px); }
+  .name .surname { font-size: clamp(16px, 4vw, 34px); letter-spacing: 0.12em; }
+}
+
+/* ──────────────────────────────────────
+   VIII. Plate (home — basics only)
+   ────────────────────────────────────── */
+.plate {
+  position: relative;
+  padding: var(--plate-py) 0;
+  border-top: 1px solid var(--hairline);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.plate:first-of-type { border-top: 0; padding-top: 0; }
+
+/* The plate showed a 76px "PL 01" cursor plate but was not navigable (SPEC §4.3).
+   script.js now makes the whole article follow its own .plate-read href, and
+   stamps .is-clickable on exactly the plates it wired up — so the pointer
+   affordance appears only where the behaviour actually exists. The visible
+   "Read the plate" link stays, and remains the keyboard path. */
+.plate.is-clickable { cursor: pointer; }
+.plate.is-clickable { cursor: pointer; }
+
+.plate-head {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 48px;
+  align-items: baseline;
+  margin-bottom: 56px;
+  position: relative;
+}
+
+.plate-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.plate-num .roman-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  display: block;
+  margin-top: 4px;
+}
+
+.plate-title {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-size: clamp(40px, 5.6vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+
+.plate-title .it { font-style: italic; font-weight: 200; }
+
+/* Year — now legible, animated character reveal */
+.plate-year {
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  text-transform: uppercase;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  font-weight: 400;
+}
+
+.plate-year::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.plate-year .y-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--ochre);
+}
+
+/* Body grid — meta gets more room, no longer squished */
+.plate-body {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(380px, 34ch) 1fr;
+  gap: 48px;
+}
+
+.plate-meta {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+.plate-meta dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-top: 22px;
+  font-weight: 400;
+}
+
+.plate-meta dt:first-child { margin-top: 0; }
+
+.plate-meta dd {
+  color: var(--ink);
+  font-size: 14px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+.wall-text {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(17px, 1.4vw, 20px);
+  line-height: 1.55;
+  letter-spacing: -0.008em;
+  color: var(--ink-soft);
+  max-width: 540px;
+}
+
+.wall-text .drop {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  font-size: 4.4em;
+  line-height: 0.85;
+  float: left;
+  margin: 0.04em 0.08em -0.05em 0;
+  color: var(--ochre);
+}
+
+.wall-text p + p { margin-top: 1.1em; text-indent: 1.5em; }
+
+.plate-visual {
+  margin-top: 72px;
+  position: relative;
+  background: var(--paper-soft);
+  border: 1px solid var(--hairline);
+  padding: 56px;
+  overflow: hidden;
+}
+
+.plate-visual::before {
+  content: attr(data-figure);
+  position: absolute;
+  top: 18px;
+  left: 24px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.plate-visual svg { display: block; width: 100%; height: auto; }
+
+/* Plate footer — read plate */
+.plate-footer {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hairline-soft);
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 48px;
+  align-items: baseline;
+}
+
+.plate-read {
+  width: fit-content;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 18px;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  transition: color 0.4s var(--ease);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+}
+
+.plate-read:hover { color: var(--ochre); border-color: var(--ochre); }
+.plate-read .arrow { transition: transform 0.4s var(--ease); }
+.plate-read:hover .arrow { transform: translateX(6px); }
+
+@media (max-width: 900px) {
+  .plate-head, .plate-body, .plate-footer { grid-template-columns: 1fr; gap: 24px; }
+  .plate-year { text-align: left; align-items: flex-start; }
+  .plate-visual { padding: 32px 20px; }
+}
+
+/* ──────────────────────────────────────
+   IX. SVG common
+   ────────────────────────────────────── */
+.svg-ink   { stroke: var(--ink); fill: none; }
+.svg-soft  { stroke: var(--muted); fill: none; }
+.svg-ochre { stroke: var(--ochre); fill: var(--ochre); }
+/* SPEC §4.4 flagged .svg-paper as defined-and-never-applied ("remove or
+   apply"). It is now applied — index.html and alx.html both use it for the
+   GUI-pick panel ground in the Plate II dialogue figure — so it stays. */
+.svg-paper { fill: var(--paper-soft); }
+text.lbl   { font-family: var(--mono); font-size: 9px; fill: var(--muted); letter-spacing: 0.12em; }
+
+/* SVG presentation attributes lose to ANY author CSS rule, so `text.lbl` above
+   was silently overriding every fill="…" written on a .lbl in the markup. That
+   is correct for the grey that used to sit there (#948D84, 2.91:1 — now gone
+   from the HTML), but it was also flattening the SIX deliberate ochre labels in
+   the Hungerhub order-floor figure — "PREP SLA · 9 MIN AVG", "FIRING",
+   "LATE · ESCALATE" in index.html and hungerhub.html — to --muted, which
+   erases the escalation signal the figure exists to show.
+
+   .lbl-ochre is the class the markup should carry. The attribute selector under
+   it is a bridge for the markup that ships today; it is deliberately pinned to
+   the one ochre token value so it can never re-admit a failing colour. Both
+   land on --ochre (5.45:1 on paper, 5.69:1 on --paper-soft: AA at any size). */
+text.lbl-ochre,
+text.lbl[fill="#9A4B2A"] { fill: var(--ochre); }
+text.lbl-ink { font-family: var(--mono); font-size: 9px; fill: var(--ink); letter-spacing: 0.12em; }
+text.serif-cap { font-family: var(--serif); font-style: italic; font-weight: 300; fill: var(--ink); }
+
+/* ──────────────────────────────────────
+   X. On Practice
+
+   Section II is no longer a list of unwritten essays (SPEC §3.4); it is
+   leadership evidence with numbers on it. Two variants:
+
+     .practice-item              interactive — for a real <a>/link block.
+                                 Keeps the hover shift, sweep and ochre title.
+     .practice-item.is-static    non-interactive evidence block. ALL hover
+                                 affordances are suppressed: a hover response
+                                 on something that cannot be clicked is a lie
+                                 about what the page will do.
+
+   Anything carrying .is-static must NOT carry data-cursor="link" either.
+   ────────────────────────────────────── */
+.practice-list { list-style: none; margin: 0; padding: 0; }
+
+.practice-item {
+  display: grid;
+  /* Third track was 220px: too narrow for the labels index.html ships, which
+     broke to four ragged right-aligned mono lines and orphaned single words
+     ("…DESIGN / OPS"). 300px takes nothing the title needs — the widest title
+     measures 238px inside an 884px track. */
+  grid-template-columns: 80px 1fr 300px;
+  gap: 48px;
+  padding: 56px 0;
+  border-bottom: 1px solid var(--hairline);
+  align-items: baseline;
+  transition: padding 0.5s var(--ease);
+  position: relative;
+}
+
+.practice-item:first-child { border-top: 1px solid var(--hairline); }
+
+/* Interactive variant only — scoped, never "applied then undone".
+   An item counts as interactive if it IS a link, is explicitly marked
+   .is-link, or actually contains one. .is-static always wins. Browsers
+   without :has() simply drop that branch (:is() is forgiving), which fails
+   in the safe direction: no hover promise. */
+:is(a.practice-item,
+    .practice-item.is-link,
+    .practice-item:has(a[href])):not(.is-static):hover {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+:is(a.practice-item,
+    .practice-item.is-link,
+    .practice-item:has(a[href])):not(.is-static):hover .practice-title {
+  color: var(--ochre);
+}
+
+:is(a.practice-item,
+    .practice-item.is-link,
+    .practice-item:has(a[href])):not(.is-static)::before {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -1px;
+  width: 0; height: 1px;
+  background: var(--ink);
+  transition: width 0.7s var(--ease);
+}
+
+:is(a.practice-item,
+    .practice-item.is-link,
+    .practice-item:has(a[href])):not(.is-static):hover::before { width: 100%; }
+
+/* Static evidence block: no movement, no colour change, no sweep. */
+.practice-item.is-static { transition: none; }
+
+.practice-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ochre);
+  font-weight: 400;
+}
+
+.practice-title {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-size: clamp(26px, 3vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  transition: color 0.4s var(--ease);
+}
+
+.practice-title .it { font-style: italic; }
+
+.practice-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.7;
+}
+
+.practice-dek {
+  grid-column: 2 / 3;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--muted);
+  margin-top: 8px;
+  max-width: 62ch;
+  letter-spacing: -0.005em;
+}
+
+/* Numbers inside the dek read as fact, not as emphasis-italic. */
+.practice-dek strong {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* Scope proof. Drop a .practice-stat inside .practice-meta (column 3) and it
+   inherits that column's right alignment; drop it in column 2 and it sits
+   left. Sized to carry "50+", "98+", "−38%" or "$15M+" without wrapping the
+   220px track. Matches the .outcome-cell .stat language already on the
+   chapter pages, so the two read as one system. */
+.practice-stat {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  font-size: clamp(38px, 4.4vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  margin-bottom: 12px;
+  text-transform: none;
+}
+
+.practice-stat sup,
+.practice-stat .unit {
+  font-size: 0.34em;
+  font-style: normal;
+  color: var(--ochre);
+  vertical-align: super;
+  letter-spacing: 0.08em;
+  margin-left: 2px;
+}
+
+.practice-stat-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 300px;
+}
+
+@media (max-width: 900px) {
+  .practice-item { grid-template-columns: 60px 1fr; gap: 24px; }
+  /* Both drop below the title. Placing them in column 2 rather than spanning
+     1/3 with a 60px indent is what actually aligns them with the title: the
+     old indent ignored the 24px column gap, so the stat and the dek sat 24px
+     to the LEFT of the heading they belong to. */
+  .practice-dek { grid-column: 2 / 3; padding-left: 0; }
+  /* Previously display:none. The right-hand column now carries the scope
+     proof, so it drops below the title instead of disappearing. */
+  .practice-meta {
+    grid-column: 2 / 3;
+    padding-left: 0;
+    text-align: left;
+    margin-top: 4px;
+  }
+  .practice-stat { font-size: clamp(34px, 11vw, 52px); }
+  .practice-stat-label { max-width: none; }
+}
+
+/* ──────────────────────────────────────
+   XI. Critique (testimonials)
+   ────────────────────────────────────── */
+.critique-list {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+  padding-left: 80px;
+}
+
+.crit {
+  position: relative;
+  max-width: 760px;
+}
+
+.crit:nth-child(even) {
+  align-self: flex-end;
+  max-width: 680px;
+  padding-right: 40px;
+}
+
+.crit:nth-child(odd) {
+  padding-left: 0;
+}
+
+.crit-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ochre);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 400;
+}
+
+.crit-num .rule {
+  flex: 0 0 32px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.crit-quote {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.35;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  position: relative;
+  padding-left: 32px;
+}
+
+.crit-quote::before {
+  content: '\201C';
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  font-size: 80px;
+  line-height: 1;
+  color: var(--ochre);
+  font-weight: 200;
+  font-style: italic;
+}
+
+.crit-author {
+  margin-top: 32px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+  padding-left: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.crit-author .who {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.crit-author .role {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Placeholder for the two testimonials still to be collected (SPEC §3.5)
+
+   Design intent: this must NOT look like a finished empty state. It is a
+   reserved hole in the page. Dashed hairline, recessed --paper-deep ground,
+   a faint ochre hatch, sans-serif body copy instead of the display italic,
+   and no ochre quote mark. Placed after .crit:nth-child(even) so it never
+   picks up the alternating right-hand offset — a to-do does not get to be
+   part of the composition's rhythm.
+   ─────────────────────────────────────────────────────────────────────── */
+.crit:is(.is-placeholder, .crit-placeholder) {
+  align-self: flex-start;
+  max-width: 620px;
+  padding: 30px 34px 32px;
+  /* --ochre-light was a seventh dead token (the spec listed six). Used here:
+     a dashed ochre edge marks a reserved, unfinished area in the accent
+     family without pretending to be a finished card. */
+  border: 1px dashed var(--ochre-light);
+  background:
+    repeating-linear-gradient(45deg,
+      transparent 0 11px,
+      var(--ochre-wash) 11px 22px),
+    var(--paper-deep);
+}
+
+.crit:is(.is-placeholder, .crit-placeholder) .crit-num {
+  color: var(--ink-faint);
+  margin-bottom: 16px;
+}
+
+.crit:is(.is-placeholder, .crit-placeholder) .crit-num .rule { background: var(--ink-faint); }
+
+.crit:is(.is-placeholder, .crit-placeholder) .ph-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 14px;
+}
+
+/* Body copy for the placeholder. Deliberately plain and deliberately not the
+   quote face — but still ~5:1 on the ground, because it is an instruction
+   someone has to read, not decoration. */
+.crit:is(.is-placeholder, .crit-placeholder) .ph-body,
+.crit:is(.is-placeholder, .crit-placeholder) .crit-quote {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-style: normal;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--ink-faint);
+  max-width: 46ch;
+  padding-left: 0;
+}
+
+.crit:is(.is-placeholder, .crit-placeholder) .crit-quote::before { content: none; }
+
+.crit:is(.is-placeholder, .crit-placeholder) .crit-author {
+  margin-top: 22px;
+  padding-top: 14px;
+  padding-left: 0;
+  border-top: 1px dashed var(--hairline);
+}
+
+.crit:is(.is-placeholder, .crit-placeholder) .crit-author .who,
+.crit:is(.is-placeholder, .crit-placeholder) .crit-author .role {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  /* --muted measures 4.15:1 against the hatched placeholder ground — below
+     AA. --ink-faint composites to 4.72:1 there, so the to-do stays readable
+     even though it is deliberately the quietest block on the page. */
+  color: var(--ink-faint);
+}
+
+@media (max-width: 900px) {
+  .critique-list { padding-left: 0; gap: 80px; }
+  .crit, .crit:nth-child(even) { max-width: 100%; padding-right: 0; align-self: stretch; }
+  .crit-quote { font-size: 22px; padding-left: 24px; }
+  .crit-author { padding-left: 24px; }
+  .crit:is(.is-placeholder, .crit-placeholder) { align-self: stretch; max-width: 100%; padding: 24px 22px 26px; }
+  .crit:is(.is-placeholder, .crit-placeholder) .ph-body,
+  .crit:is(.is-placeholder, .crit-placeholder) .crit-quote { font-size: 14px; padding-left: 0; }
+  .crit:is(.is-placeholder, .crit-placeholder) .crit-author { padding-left: 0; }
+}
+
+/* ──────────────────────────────────────
+   XII. Index (back-matter)
+   ────────────────────────────────────── */
+.index-grid {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 48px;
+}
+
+.index-block {
+  border-top: 1px solid var(--hairline);
+  padding: var(--block-py) 0;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 48px;
+}
+
+.index-block:first-child { border-top: 0; padding-top: 0; }
+
+.index-block .index-label {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  font-size: 28px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.index-block .index-label .sub {
+  display: block;
+  font-weight: 400;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-top: 10px;
+}
+
+.client-list {
+  columns: 2;
+  column-gap: 60px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 2.1;
+}
+
+.client-list li {
+  list-style: none;
+  break-inside: avoid;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  border-bottom: 1px dotted var(--hairline);
+}
+
+.client-list .yr {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.cred-list {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.cred-list li {
+  list-style: none;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--hairline-soft);
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: baseline;
+}
+
+.cred-list li:last-child { border-bottom: 0; }
+
+.cred-list em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+.cred-list .cred-side {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  white-space: nowrap;
+}
+
+/* The 280px label track starved the list: at 901px it left 365px for a
+   two-column .client-list whose min-content needs ~390px, so the 1fr track
+   grew past its parent and the whole Index block hung 15px off the right edge
+   (measured 916px against a 901px viewport). Stacking the label above the list
+   below 1080px gives the list the full column; two columns still fit inside it.
+   1080px, not 950px, so the fix clears the measured failure with margin. */
+@media (max-width: 1080px) {
+  .index-block { grid-template-columns: 1fr; gap: 20px; }
+}
+
+@media (max-width: 900px) {
+  .index-grid { grid-template-columns: 1fr; }
+  .index-block { padding: 40px 0; }
+  .client-list { columns: 1; }
+}
+
+/* ──────────────────────────────────────
+   XIII. Colophon
+   ────────────────────────────────────── */
+.colophon {
+  padding-top: var(--section-py);
+  border-top: 1px solid var(--hairline);
+}
+
+.colo-grid {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 1fr;
+  gap: 48px;
+}
+
+.colo-block .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 24px;
+  font-weight: 400;
+}
+
+.colo-block .body {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.colo-block .body em { font-style: italic; }
+.colo-block .body p + p { margin-top: 0.8em; }
+
+@media (max-width: 900px) {
+  .colo-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* ──────────────────────────────────────
+   XIV. Inquiries (new contact)
+   ────────────────────────────────────── */
+.inquiries {
+  padding-top: var(--section-py);
+  padding-bottom: 120px;
+  border-top: 1px solid var(--hairline);
+}
+
+.inquiries-grid {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 48px;
+}
+
+.inq-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 48px;
+  /* An inline-flex row sizes to max-content and will not wrap, so at 320px
+     this single 312px line pushed past a 272px column. Capping it at the
+     column width lets the label text wrap instead of overhanging. */
+  max-width: 100%;
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+
+.inq-status .dot {
+  width: 6px; height: 6px;
+  background: var(--ochre);
+  border-radius: 50%;
+  position: relative;
+}
+
+.inq-status .dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--ochre);
+  opacity: 0.4;
+  animation: ripple 2.4s var(--ease-soft) infinite;
+}
+
+.inq-statement {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  /* Floor lowered 36px → 30px. The statement sets the email address as display
+     type, and "aashi.rich@gmail.com" is one unbreakable 20-character token:
+     at 36px it measured 304px against a 272px column at a 320px viewport.
+     5.5vw only overtakes 30px above ~545px, so nothing at or above phone width
+     and nothing on desktop changes. break-word is the backstop for whatever
+     long token the copy grows next. */
+  font-size: clamp(30px, 5.5vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  max-width: 1080px;
+  margin-bottom: 64px;
+  overflow-wrap: break-word;
+}
+
+.inq-statement em {
+  font-style: normal;
+  color: var(--ochre);
+}
+
+.inq-statement a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid var(--ochre);
+  padding-bottom: 4px;
+  transition: color 0.4s var(--ease);
+}
+
+.inq-statement a:hover { color: var(--ochre); }
+
+.inq-channels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  border-top: 1px solid var(--ink);
+  padding-top: 36px;
+}
+
+.inq-channel { display: flex; flex-direction: column; gap: 8px; }
+
+.inq-channel .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 400;
+}
+
+.inq-channel a, .inq-channel .v {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 20px;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.015em;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 0.4s var(--ease), color 0.4s var(--ease);
+  align-self: flex-start;
+}
+
+.inq-channel a:hover {
+  color: var(--ochre);
+  border-color: var(--ochre);
+}
+
+.inq-channel .sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+@media (max-width: 900px) {
+  .inquiries-grid { grid-template-columns: 1fr; }
+  .inq-channels { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+
+@media (max-width: 540px) {
+  .inq-channels { grid-template-columns: 1fr; }
+}
+
+/* ──────────────────────────────────────
+   XV. Footer
+   ────────────────────────────────────── */
+.footer {
+  padding: 56px var(--gutter);
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer .set-in {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .footer { padding: 40px var(--gutter-sm); }
+}
+
+/* ──────────────────────────────────────
+   XVI. Project page (chapter)
+   ────────────────────────────────────── */
+/* Chapter cover follows the frontispiece's tightened pacing (SPEC §4.1) —
+   the same "too slow before evidence" problem applies on all six plate pages. */
+.chapter-cover {
+  min-height: 100vh;
+  padding-top: 160px;
+  padding-bottom: 88px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.chapter-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 48px;
+}
+
+.chapter-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 40px;
+  display: flex;
+  gap: 10px 32px;
+  font-weight: 400;
+  /* Same failure as .eyebrow: a non-wrapping flex row at 390px broke INSIDE
+     its items — "PLATE / I" and, worst, the year ticker as "2023 / P" over
+     "RESENT". Wrap between items; never through one. */
+  flex-wrap: wrap;
+}
+
+.chapter-eyebrow .sep { color: var(--muted); }
+
+.chapter-title {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-size: clamp(56px, 9vw, 144px);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+  margin-bottom: 48px;
+}
+
+.chapter-title .it { font-style: italic; }
+
+.chapter-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  max-width: 760px;
+  margin-bottom: 80px;
+}
+
+.chapter-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  border-top: 1px solid var(--ink);
+  padding-top: 32px;
+}
+
+.chapter-meta .item .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 12px;
+  display: block;
+  font-weight: 400;
+}
+
+.chapter-meta .item .val {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.chapter-meta .item .val em {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .chapter-grid { grid-template-columns: 1fr; gap: 24px; }
+  .chapter-meta { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .chapter-cover { padding-top: 112px; padding-bottom: 48px; }
+}
+
+/* Chapter body sections */
+.chapter-section {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 48px;
+  padding-top: var(--plate-py);
+  padding-bottom: var(--plate-py);
+  border-top: 1px solid var(--hairline);
+}
+
+/* Scoped to .chapter-section only, this rule left the Outcomes strip's own
+   .col-label completely unstyled: measured 16px DM Sans, sentence case, --ink,
+   against 10px mono ochre caps everywhere else — on all six chapter pages.
+   .chapter-outcomes carries the same label in the same 80px column, so it takes
+   the same rule. */
+.chapter-section .col-label,
+.chapter-outcomes .col-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 400;
+  padding-top: 8px;
+}
+
+.chapter-section .col-body {
+  max-width: 880px;
+}
+
+.chapter-section h2 {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 48px;
+  max-width: 700px;
+}
+
+.chapter-section .lede {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.55;
+  letter-spacing: -0.008em;
+  color: var(--ink);
+  max-width: 68ch;
+}
+
+.chapter-section .lede .drop {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  font-size: 4.2em;
+  line-height: 0.85;
+  float: left;
+  margin: 0.04em 0.08em -0.05em 0;
+  color: var(--ochre);
+}
+
+.chapter-section .lede p + p {
+  margin-top: 1.1em;
+  text-indent: 1.5em;
+}
+
+.chapter-section .lede em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+.chapter-section .pullquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 200;
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  border-left: 1px solid var(--ochre);
+  padding-left: 32px;
+  margin: 56px 0;
+  max-width: 720px;
+}
+
+.chapter-section .pullquote em { font-style: normal; color: var(--ochre); }
+
+.movement-list {
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+}
+
+.movement {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 32px;
+  padding: 32px 0;
+  border-top: 1px solid var(--hairline-soft);
+  align-items: baseline;
+}
+
+.movement:first-child { border-top: 0; }
+
+.movement-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ochre);
+  font-weight: 400;
+}
+
+.movement h3 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.movement p {
+  max-width: 66ch;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* Chapter outcome strip */
+.chapter-outcomes {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 48px;
+  padding-top: var(--plate-py);
+  padding-bottom: var(--plate-py);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.outcomes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.outcome-cell .stat {
+  font-family: var(--serif);
+  font-weight: 200;
+  font-style: italic;
+  font-size: clamp(44px, 6vw, 88px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 14px;
+}
+
+.outcome-cell .stat sup {
+  font-size: 0.4em;
+  font-style: normal;
+  color: var(--ochre);
+  vertical-align: super;
+  margin-left: 2px;
+}
+
+.outcome-cell .stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.7;
+  /* No max-width: .stat-label is an inline <span> in the markup all six pages
+     ship, and max-width does not apply to a non-replaced inline box — the
+     declaration that used to sit here measured as inert (labels ran 242–257px
+     inside a 304px cell). The grid track is the real constraint. */
+}
+
+@media (max-width: 900px) {
+  .chapter-section, .chapter-outcomes { grid-template-columns: 1fr; gap: 20px; padding-top: 56px; padding-bottom: 56px; }
+  .outcomes-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+
+/* Chapter navigation footer */
+.chapter-nav {
+  padding-top: 120px;
+  padding-bottom: 60px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 48px;
+  align-items: baseline;
+  border-top: 1px solid var(--hairline);
+}
+
+.chapter-nav .index-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  text-decoration: none;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 4px;
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.chapter-nav .index-link:hover { color: var(--ochre); border-color: var(--ochre); }
+
+.chapter-nav .prev-plate,
+.chapter-nav .next-plate {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  max-width: 320px;
+}
+
+.chapter-nav .next-plate { align-items: flex-end; text-align: right; margin-left: auto; }
+
+.chapter-nav .pn-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 400;
+}
+
+.chapter-nav .pn-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  transition: color 0.4s var(--ease);
+}
+
+.chapter-nav .prev-plate:hover .pn-title,
+.chapter-nav .next-plate:hover .pn-title {
+  color: var(--ochre);
+}
+
+@media (max-width: 900px) {
+  .chapter-nav { grid-template-columns: 1fr; gap: 32px; padding-top: 80px; padding-bottom: 40px; }
+  .chapter-nav .next-plate { align-items: flex-start; text-align: left; margin-left: 0; }
+}
+
+/* Chapter figure */
+.chapter-figure {
+  margin: 80px 0;
+  background: var(--paper-soft);
+  border: 1px solid var(--hairline);
+  padding: 64px;
+  position: relative;
+}
+
+.chapter-figure::before {
+  content: attr(data-figure);
+  position: absolute;
+  top: 18px;
+  left: 24px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ochre);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.chapter-figure svg { display: block; width: 100%; height: auto; }
+
+@media (max-width: 900px) {
+  .chapter-figure { padding: 32px 20px; margin: 48px 0; }
+}
+
+/* ──────────────────────────────────────
+   XVII. Focus states
+
+   Before Edition II the site styled :hover and nothing else — a real WCAG
+   2.1 §2.4.7 failure: a keyboard user could tab the whole site and never see
+   where they were. Every interactive element now takes a visible focus ring
+   in the existing ochre language, using --ochre-deep (8.66:1 on paper) so
+   the ring is unambiguously stronger than the ochre hover colour.
+
+   :focus-visible only — pointer users never see the ring. The last rule
+   suppresses the UA outline for mouse focus without suppressing it for
+   keyboard focus. This section sits last so its rules win ties.
+   ────────────────────────────────────── */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--ochre-deep);
+  outline-offset: 4px;
+  background-color: var(--ochre-wash);
+}
+
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) { outline: none; }
+
+/* Chrome */
+.chrome .mark:focus-visible,
+.chrome .nav a:focus-visible,
+.chrome .back:focus-visible {
+  color: var(--ochre-deep);
+  outline-offset: 6px;
+}
+
+.chrome .nav a:focus-visible .idx { color: var(--ochre-deep); }
+.chrome .back:focus-visible .arrow { transform: translateX(-4px); }
+
+/* Plate */
+.plate-read:focus-visible {
+  color: var(--ochre-deep);
+  border-color: var(--ochre-deep);
+  outline-offset: 6px;
+}
+
+.plate-read:focus-visible .arrow { transform: translateX(6px); }
+
+/* The article itself is only mouse-navigable (script.js); the keyboard path
+   is .plate-read. If an HTML agent gives the article a tabindex, it still
+   gets a ring rather than nothing. */
+.plate.is-clickable:focus-visible { outline-offset: 10px; background-color: transparent; }
+
+/* Practice — interactive variant only. A static evidence block is not
+   focusable and must never look focusable. */
+.practice-item:not(.is-static) a:focus-visible .practice-title { color: var(--ochre-deep); }
+
+/* Chapter navigation */
+.chapter-nav .index-link:focus-visible {
+  color: var(--ochre-deep);
+  border-color: var(--ochre-deep);
+}
+
+.chapter-nav .prev-plate:focus-visible .pn-title,
+.chapter-nav .next-plate:focus-visible .pn-title { color: var(--ochre-deep); }
+
+/* Inquiries */
+.inq-channel a:focus-visible {
+  color: var(--ochre-deep);
+  border-color: var(--ochre-deep);
+}
+
+.inq-statement a:focus-visible {
+  color: var(--ochre-deep);
+  border-bottom-color: var(--ochre-deep);
+  outline-offset: 10px;
+}
+
+/* Anything the reduced-motion block would otherwise flatten must still show
+   its ring — outlines are not transitions, so nothing to restore, but keep
+   the offset stable rather than animating it. */
+@media (prefers-reduced-motion: reduce) {
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible { transition: none; }
+}
+
+/* ──────────────────────────────────────
+   XVIII. Misc
+   ────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* The nav jumps between six in-page sections; smooth scrolling is exactly
+     the large-area motion this preference exists to switch off. */
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .year-ticker .char { transform: none; }
+  .eyebrow .dot::after, .inq-status .dot::after { animation: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+
+/* ──────────────────────────────────────
+   XIX. Audit fixes — craft standards
+   ────────────────────────────────────── */
+
+/* Lining, tabular figures inside caps. The global oldstyle-nums setting is
+   correct for running text and wrong inside mono uppercase labels. */
+.lbl, .lbl-ink, .lbl-ochre, .plate-num, .practice-meta, .cred-side,
+.index-label .sub, .col-label, .chapter-eyebrow, .breadcrumb, .meridian,
+.plate-meta dt, .chapter-meta .label, .stat-label, .footer {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Widow/orphan control. Absent entirely before this. */
+h1, h2, h3, h4, .plate-title, .chapter-title, .section-head .title,
+.chapter-dek, .tagline, figcaption {
+  text-wrap: balance;
+}
+p, .lede, .wall-text p, .movement p, .practice-dek {
+  text-wrap: pretty;
+}
+
+/* SVG colour tokens. 284 hardcoded hexes across the figures duplicated
+   these values; these classes are the migration target. */
+.svg-ink    { fill: var(--ink); }
+.svg-muted  { fill: var(--muted); }
+.svg-rule   { stroke: var(--hairline); fill: none; }
+.lbl-ochre  { fill: var(--ochre); }
+
+/* Figure captions promoted out of the SVG. An in-SVG 13px caption renders
+   at 3.25px on a 390px viewport; this renders at 13px at every width. */
+.plate-visual figcaption,
+.chapter-figure figcaption {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  max-width: 68ch;
+}
+
+.plate-visual figcaption .fig-num,
+.chapter-figure figcaption .fig-num {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Mobile figures. At 390px the SVG scale factor is 0.25, so a 9px label
+   renders at 2.25px — below anything a browser draws as type. Scroll the
+   figure at ~0.63 instead. */
+@media (max-width: 768px) {
+  .plate-visual .fig-scroll,
+  .chapter-figure .fig-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .plate-visual .fig-scroll > svg,
+  .chapter-figure .fig-scroll > svg {
+    min-width: 760px;
+  }
+  .plate-visual .fig-hint,
+  .chapter-figure .fig-hint {
+    display: block;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+.fig-hint { display: none; }
+
+/* .movement had no mobile rule: a 60px rail plus a 32px gap consumed 27%
+   of a 390px viewport, leaving ~40 characters per line. */
+@media (max-width: 900px) {
+  .movement { grid-template-columns: 1fr; gap: 16px; }
+  .movement p { max-width: none; }
+}
+
+@media (max-width: 540px) {
+  .fp-meta { grid-template-columns: 1fr; }
+}
+
+/* ──────────────────────────────────────
+   XX. Brief plates + inline testimonials
+   Variable case-study depth: plates I–III carry the full treatment,
+   IV–VII are three-line previews. Uniform depth appears on zero of the
+   17 benchmarked design-leader portfolios.
+   ────────────────────────────────────── */
+
+.plate--brief { padding-top: 56px; padding-bottom: 56px; }
+.plate--brief .plate-head { margin-bottom: 32px; }
+.plate--brief .plate-title { font-size: clamp(32px, 3.6vw, 52px); }
+
+.plate-body--brief {
+  display: grid;
+  grid-template-columns: var(--rail) 1fr;
+  gap: 48px;
+}
+
+.brief-lines { max-width: 64ch; }
+
+.brief-challenge {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(17px, 1.3vw, 19px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.brief-role,
+.brief-metric {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  font-variant-numeric: lining-nums tabular-nums;
+  margin-top: 16px;
+}
+
+.brief-role  { color: var(--muted); }
+.brief-metric { color: var(--ochre); }
+
+/* Testimonials sit after the plate they vouch for, not in a block of their
+   own. A quote next to an unsupported claim is the claim's evidence. */
+.crit-inline {
+  max-width: 720px;
+  margin: 0 0 0 128px;
+  padding: 32px 0 40px 32px;
+  border-left: 1px solid var(--ochre);
+}
+
+.crit-hook {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.crit-body {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin-top: 16px;
+  max-width: 62ch;
+}
+
+.crit-inline .crit-author {
+  margin-top: 20px;
+  padding-top: 0;
+  padding-left: 0;
+  border-top: 0;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.client-note,
+.index-more {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-top: 20px;
+  max-width: 58ch;
+}
+
+.index-more a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ochre);
+  padding-bottom: 2px;
+}
+
+.index-more a:hover { color: var(--ochre); }
+
+@media (max-width: 900px) {
+  .plate-body--brief { grid-template-columns: 1fr; gap: 20px; }
+  .crit-inline { margin-left: 0; padding-left: 20px; }
+}
