@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Num, SectionTitle } from '../components/Type';
 import { plates, markHeight } from '../content';
-import { CalendarIcon } from '../components/Icons';
+import { CalendarIcon, LockIcon } from '../components/Icons';
+import PinGate, { isUnlocked } from '../components/PinGate';
 
 /* The project page. Everything the index deliberately leaves out ends
    up here: the full standfirst, the engagement facts, and the prose. */
@@ -12,6 +13,15 @@ const PlatePage: React.FC = () => {
   const plate = plates.find((p) => p.id === id);
   const index = plates.findIndex((p) => p.id === id);
   const next = plates[(index + 1) % plates.length];
+
+  /* The next-project link was the one way past the gate: it is a
+     plain Link, so clicking it walked straight into a locked case.
+     It now goes through the same dialog as the index rows. */
+  const [gate, setGate] = useState<string | null>(null);
+  const [open, setOpen] = useState(isUnlocked());
+  const nextTo = `/work/${next.id}`;
+  /* Same rule as the index: the first project is open, the rest wait. */
+  const nextLocked = !open && next.id !== plates[0].id;
 
   if (!plate) {
     return (
@@ -138,10 +148,23 @@ const PlatePage: React.FC = () => {
         <Link to="/work" className="entry-read">
           <span className="arrow">←</span> All work
         </Link>
-        <Link to={`/work/${next.id}`} className="entry-read">
-          {next.clientFull || next.client} <span className="arrow">→</span>
-        </Link>
+        {nextLocked ? (
+          <button
+            type="button"
+            className="entry-read as-button"
+            onClick={() => setGate(nextTo)}
+          >
+            <LockIcon />
+            {next.clientFull || next.client} <span className="arrow">→</span>
+          </button>
+        ) : (
+          <Link to={nextTo} className="entry-read">
+            {next.clientFull || next.client} <span className="arrow">→</span>
+          </Link>
+        )}
       </div>
+
+      <PinGate to={gate} onClose={() => { setGate(null); setOpen(isUnlocked()); }} />
     </article>
   );
 };

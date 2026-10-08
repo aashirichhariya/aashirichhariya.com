@@ -2476,3 +2476,49 @@ main > .inquiries { padding-bottom: var(--section-py); }
 @media (max-width: 900px) {
   .frontispiece .name { margin-top: 0; }
 }
+
+/* A gated next-project link is a button; it must not inherit the
+   browser's button chrome or lose the link's type. */
+.entry-read.as-button {
+  background: none;
+  border: 0;
+  padding: 0 0 3px;
+  font: inherit;
+  color: var(--ochre);
+  cursor: pointer;
+}
+
+/* ============================================================
+   §46. THE FIRST SECTION OF A ROUTE ARRIVES ON LOAD
+
+   Section titles are cut open by `animation-timeline: view()`. That
+   works for everything you scroll to, but the first section of a
+   route is already past its entry range when the page paints, so it
+   simply appears: About, Work and Contact had no entrance at all
+   while the home hero and the case covers did.
+
+   The first section head on any route switches to a load-driven
+   animation on the same beat. `animation-timeline: auto` is what
+   detaches it from the scroll timeline; the longhands are
+   deliberate, since the `animation` shorthand resets that property
+   and the minifier reorders declarations.
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  main > .canvas:first-child .section-head .title .title-cut {
+    animation-name: type-cut;
+    animation-duration: 1200ms;
+    animation-timing-function: cubic-bezier(0.16, 0.84, 0.26, 1);
+    animation-delay: var(--beat-case);
+    animation-fill-mode: both;
+    animation-timeline: auto;
+    animation-range: normal;
+  }
+  main > .canvas:first-child .section-head .range {
+    animation: lift-in 700ms var(--curve) calc(var(--beat-case) + var(--beat) * 0.5) both;
+  }
+  main > .canvas:first-child .about-lede,
+  main > .canvas:first-child > .index-list,
+  main > .canvas:first-child .inq-status {
+    animation: lift-in 700ms var(--curve) calc(var(--beat-case) + var(--beat)) both;
+  }
+}
