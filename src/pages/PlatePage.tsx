@@ -48,6 +48,7 @@ const PlatePage: React.FC = () => {
   return (
     <article className="canvas page">
       <header className="case-head">
+        <div className="case-head-left">
         {/* The mark belongs here, at a size where it is legible, rather
             than shrunk into the index where the client's name already
             scans faster than a logo does. */}
@@ -75,7 +76,9 @@ const PlatePage: React.FC = () => {
             </>
           )}
         </h1>
+        </div>
 
+        <div className="case-head-right">
         <p className="case-dek">{plate.dek}</p>
 
         <dl className="case-facts">
@@ -86,7 +89,28 @@ const PlatePage: React.FC = () => {
             </div>
           ))}
         </dl>
+        </div>
       </header>
+
+      {/* The film sits directly under the cover, at the full measure
+          and larger than any still on the page. It never downloads
+          until asked: twelve megabytes is not something to spend on
+          a reader who may not watch it. */}
+      {plate.film && (
+        <figure className="case-film">
+          <video
+            src={plate.film.src}
+            poster={plate.film.poster}
+            controls
+            playsInline
+            preload="none"
+          />
+          <figcaption>
+            <span>{plate.film.caption}</span>
+            <span className="case-film-len">{plate.film.length}</span>
+          </figcaption>
+        </figure>
+      )}
 
       {/* The case study. Each movement keeps the label it had in the
           static edition — The Brief, The Work, and so on — in the rail. */}

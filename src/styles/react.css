@@ -2736,3 +2736,119 @@ main > .inquiries.canvas { border-bottom: 0; }
 @media (max-width: 900px) {
   .client-row { overflow-x: auto; }
 }
+
+/* ============================================================
+   §52. THE CASE COVER, IN TWO COLUMNS
+
+   The cover ran as one stack: mark, eyebrow, title, standfirst,
+   facts. Set against the measure that is a long thin ribbon of
+   text. Title on the left, the reading matter and the engagement
+   facts on the right, so the page opens with a spread rather than
+   a column.
+   ============================================================ */
+.case-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: var(--sp-7) clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+.case-head-left { min-width: 0; }
+.case-head-right { min-width: 0; padding-top: 0.4em; }
+
+.case-title { max-width: 14ch; margin-bottom: 0; }
+.case-dek { max-width: 46ch; margin-bottom: var(--sp-6); }
+.case-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-5) var(--sp-6); }
+
+@media (max-width: 900px) {
+  .case-head { grid-template-columns: minmax(0, 1fr); gap: var(--sp-6); }
+  .case-head-right { padding-top: 0; }
+  .case-title { max-width: none; }
+}
+
+/* ============================================================
+   §53. THE FILM
+
+   Larger than any still on the page and set at the full measure,
+   because it is the only place the platform is shown moving. It
+   carries the same hairline frame and rounded corner as the stills
+   so it reads as part of the same set, and it rises on scroll a
+   little more slowly than the page, which is the whole of the
+   "gently" here: no zoom, no pin, no hijacked scroll.
+   ============================================================ */
+.case-film {
+  margin: var(--sp-7) 0;
+  grid-column: 1 / -1;
+}
+.case-film video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1024 / 720;
+  background: var(--paper-deep);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.case-film figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-5);
+  margin-top: var(--sp-3);
+  font-family: var(--mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.06em;
+  color: var(--umber);
+}
+.case-film-len { color: var(--petrol); white-space: nowrap; }
+
+/* The first version ran to `cover 85%`, a point a tall element never
+   reaches, so the film settled at opacity 0.73 and stayed dimmed.
+   It now completes inside the entry phase and ends at rest. */
+@keyframes film-drift {
+  from { transform: translateY(28px); opacity: 0.45; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .case-film video {
+      animation-name: film-drift;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 62%;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .case-film figcaption { flex-direction: column; gap: var(--sp-2); }
+}
+
+/* ============================================================
+   §54. BODY MUST NOT BE A SCROLL CONTAINER
+
+   monograph.css:71 sets `body { overflow-x: hidden }` to guard
+   against sideways scroll. `hidden` makes the element a scroll
+   container and overflow-y then computes to auto, so body became
+   the nearest scrollport for every `animation-timeline: view()` on
+   the site. Body itself never scrolls (html does), so those
+   timelines were inactive: getComputedTiming().progress came back
+   null and the animations silently fell back to their base styles.
+
+   That is why the film sat still, why the case figures never
+   wiped, and why a section title once measured as "progress 0"
+   while painting perfectly: an inactive animation applies no
+   keyframe at all.
+
+   `clip` does the same job without creating a scroll container, so
+   html stays the scroller and the timelines resolve against the
+   viewport. (I tried this once before and reverted it on the
+   strength of a blank screenshot that turned out to be a stale
+   browser-pane surface, not a rendering fault.)
+   ============================================================ */
+body {
+  overflow-x: clip;
+  overflow-y: visible;
+}

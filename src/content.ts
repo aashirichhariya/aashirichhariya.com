@@ -46,6 +46,8 @@ export type Plate = {
     figures?: { src: string; alt: string; caption: string }[];
   }[];
   outcomes: { stat: string; label: string }[];
+  /* One film per case at most, shown directly under the cover. */
+  film?: { src: string; poster: string; caption: string; length: string } | null;
   titleTop: string;
   titleItalic: string;
   year: string;
@@ -216,7 +218,13 @@ export const plates: Plate[] = [
         "stat": "40%",
         "label": "Faster time-to-workflow for internal and external users."
       }
-    ]
+    ],
+    "film": {
+      "src": "/case/coreai/walkthrough.mp4",
+      "poster": "/case/coreai/walkthrough-poster.jpg",
+      "caption": "The platform in use: workspaces, Build Mode and the agent surface.",
+      "length": "1 min 27 sec"
+    }
   },
   {
     "meta": [],
@@ -441,7 +449,7 @@ export const about: AboutBlock[] = [
     "heading": "Open to leadership conversations.",
     "paras": [
       "I am interested in roles where the design problem is a foundation rather than a feature: platform, systems and the organisations that build on them. Work from the CoreAI programme was presented to clients at Cannes Lions 2024.",
-      "Write to aashi.rich@gmail.com, or find me on LinkedIn ↗."
+      "Write to aashi.rich@gmail.com or find me on LinkedIn ↗."
     ]
   }
 ];

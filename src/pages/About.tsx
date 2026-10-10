@@ -82,7 +82,7 @@ const About: React.FC = () => {
               <a className="ink-link" href={`mailto:${profile.email}`}>
                 {profile.email}
               </a>
-              , or find me on{' '}
+              {' '}or find me on{' '}
               <a
                 className="ink-link"
                 href={profile.linkedin}
