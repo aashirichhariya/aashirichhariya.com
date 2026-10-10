@@ -2522,3 +2522,36 @@ main > .inquiries { padding-bottom: var(--section-py); }
     animation: lift-in 700ms var(--curve) calc(var(--beat-case) + var(--beat)) both;
   }
 }
+
+/* ============================================================
+   §47. THE RULE UNDER A SECTION HEADING IS DOTTED
+
+   Heading underlines and section dividers were the same 1px solid
+   hairline, so a page read as a stack of identical breaks and you
+   could not tell "this heading owns what follows" from "a new
+   section starts here". The dividers keep the solid rule. A heading
+   gets a dotted one, the way a newspaper separates a standfirst
+   from its column: present, but clearly a lighter kind of mark.
+
+   Drawn as a background rather than `border-style: dotted`, which
+   renders dense square dots at 1px and looks like a mistake. This
+   is a round dot every 6px, aligned to the bottom edge.
+   ============================================================ */
+.section-head {
+  border-bottom: 0;
+  background-image: radial-gradient(
+    circle at 1px 50%,
+    var(--hairline) 1px,
+    transparent 1.15px
+  );
+  background-size: 6px 2px;
+  background-repeat: repeat-x;
+  background-position: left bottom;
+}
+
+/* Contact's heading carries no rule at all. This was an inline
+   style on the element, which no stylesheet could override. */
+.section-head.is-bare {
+  background-image: none;
+  margin-bottom: var(--sp-7);
+}

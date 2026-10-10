@@ -9,7 +9,7 @@ import { profile } from '../content';
 const Contact: React.FC<{ lead?: boolean }> = ({ lead = false }) => {
   return (
   <section id="inquire" className="inquiries canvas">
-    <div className="section-head" style={{ borderBottom: 0, marginBottom: 64 }}>
+    <div className="section-head is-bare">
       <SectionTitle as={lead ? 'h1' : 'h2'}>Contact</SectionTitle>
       <div className="range">Where to write · Toronto</div>
     </div>
