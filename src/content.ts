@@ -237,87 +237,6 @@ export const plates: Plate[] = [
     "dek": "Reviving the core design system across multiple products, including the global mobile application and bringing acquired ventures under one design ecosystem. Commissioned to build a streamlined design-system practice that scales across the organisation."
   },
   {
-    "meta": [],
-    "body": [],
-    "logo": "/logos/mercor.png",
-    "sections": [],
-    "outcomes": [],
-    "clientFull": "Mercor",
-    "role": "Model evaluation and eval tooling design",
-    "duration": null,
-    "titleItalic": "model output.",
-    "id": "mercor",
-    "client": "Mercor",
-    "sector": "AI · Model evaluation",
-    "year": "2024 / 2026",
-    "titleTop": "Evaluating",
-    "lede": "Evaluating model output and designing the tooling evaluators work in, for a frontier AI lab.",
-    "dek": "Evaluating model output and designing the tooling evaluators work in, for a frontier AI lab. Engaged through Mercor; the lab is not named."
-  },
-  {
-    "id": "hungerhub",
-    "titleTop": "The kitchen",
-    "titleItalic": "at 11:47.",
-    "year": "2020 / 2022",
-    "meta": [],
-    "body": [],
-    "client": "hungerhub",
-    "logo": "/logos/hungerhub.png",
-    "sector": "Food operations · B2B",
-    "lede": "Slow order acknowledgment was costing Hungerhub money.",
-    "dek": "Slow order acknowledgment was costing Hungerhub money. When a kitchen was slow to confirm an order, the food started late, the delivery window slipped and the missed window came back as a support ticket, a refund and eventually a churned corporate account. Acknowledgment was the first domino and the only one design could move, so I rebuilt both surfaces around it: the restaurant partner dashboard and the Uncatering B2B web experience. Acknowledgment time fell 38%, missed-order tickets fell 51%, order volume rose 35%.",
-    "clientFull": "Hungerhub",
-    "role": "Product Designer",
-    "duration": "August 2020 – January 2022",
-    "sections": [
-      {
-        "label": "The Brief",
-        "heading": "One metric predicted the money.",
-        "paras": [
-          "A dashboard is a tool only when nobody has time to read it. Before I drew a screen, I went looking for the number that explained the platform's losses and it was not a design metric. It was acknowledgment time: the seconds between an order arriving in a restaurant and someone in that kitchen confirming it. The chain runs in one direction and it is short: a slow acknowledgment means the food starts late; late food means a driver waits or a delivery window is missed; a missed window becomes a support ticket and a refund; refunds and churned corporate accounts are what the platform actually pays for. Nobody had asked me for that number. It was simply the one that decided whether a service went well and nothing on the screen was treating it as important.",
-          "That gave me the brief I wanted rather than the one I was handed. I designed two surfaces against it: the restaurant partner dashboard, where the live order floor runs hot at noon and the Uncatering B2B web experience, where corporate clients schedule team meals at a slower but no less exacting tempo. Two audiences, one platform, two completely different time signatures; the planner has half an hour to compose an order, the line cook has nine seconds to acknowledge one. My job was to make the system respect both rhythms without leaking one into the other."
-        ]
-      },
-      {
-        "label": "The Work",
-        "heading": "Two surfaces, two tempos, one platform.",
-        "paras": [
-          "I owned UX and UI end to end on a small team and I ran the work on a weekly cadence: design on Monday, ship on Friday, stand in the lunch rush on Tuesday, adjust. Every release passed through a live floor before anyone called it done. That cadence was the design operating system on this engagement: it is what kept a two-surface platform coherent without a large team or a long specification.",
-          "Operators do not study screens at 11:47. They glance. So I designed the dashboard around what an operator could resolve in a quarter-second (order state, SLA status, escalation flag) in that order and nothing else at that level. Anything slower to read than a glance I demoted to a panel that opened on intent. Fewer things on the screen was the point, not a side effect.",
-          "The corporate planner has a different problem: assemble a meal for twenty-two people, respect dietary restrictions, hit a delivery window and justify the order to a finance team. I designed Uncatering as a composed experience: dietary filters that did not interrupt, totals that updated quietly and an order summary clean enough to forward to procurement without editing. Every one of those choices removes a reason for a corporate account to stop ordering.",
-          "Live operations are unforgiving: the dashboard had to stay readable when seventeen orders arrived in three minutes. I designed the real-time state model with the engineering team (what updates in place, what animates in, what queues, what earns a notification) and the engineers who built the socket layer set the update budget I designed inside. The screen got calmer as load increased, not noisier. The right details rose; the wrong ones receded.",
-          "I ran the creative project management end to end on that weekly rhythm. Every release shipped with adoption notes for the partner restaurants and a single line of guidance for the operations team, so a change on the floor never arrived unexplained. Anything I could not explain in one line did not ship that week: a bar I set deliberately, because on a live floor an unexplained change costs more than a delayed one."
-        ]
-      },
-      {
-        "label": "Reflection",
-        "heading": "The screen is not the achievement.",
-        "paras": [
-          "It is tempting, on operational software, to measure the work by the dashboard itself: the layout, the type, the interaction model. None of those is the achievement. The achievement is the calmer kitchen at 11:47: the operator who stopped re-checking the screen between orders, the cook who heard fewer alarms, the finance lead at the corporate client who stopped chasing receipts. The percentages are just those three people, counted.",
-          "What I took from Hungerhub is the habit I now bring to every platform I lead: find the one number that predicts the business outcome, prove the design moves it and say it in the language of the person paying for the work. Design for operations is humble by necessity: it earns its place in the inches it gives back to the people using it."
-        ]
-      }
-    ],
-    "outcomes": [
-      {
-        "stat": "−38%",
-        "label": "Faster order acknowledgment: the metric that predicts whether food ships late."
-      },
-      {
-        "stat": "−51%",
-        "label": "Fewer missed-order tickets, quarter over quarter: the ones the platform refunds."
-      },
-      {
-        "stat": "+35%",
-        "label": "More order volume through the platform once operators trusted the queue."
-      },
-      {
-        "stat": "2",
-        "label": "Surfaces on one system, partner dashboard and B2B Uncatering, owned end to end."
-      }
-    ]
-  },
-  {
     "id": "pollin",
     "titleTop": "A calmer",
     "titleItalic": "clinical day.",
@@ -378,59 +297,6 @@ export const plates: Plate[] = [
       {
         "stat": "0",
         "label": "Double entries between the clinician dashboard and the EMR; the chart is typed once."
-      }
-    ]
-  },
-  {
-    "id": "wawa",
-    "titleTop": "Specimens,",
-    "titleItalic": "a multi-brand system.",
-    "year": "2022",
-    "meta": [],
-    "body": [],
-    "client": "Wawa",
-    "logo": "/logos/wawa.png",
-    "sector": "Retail · Multi-brand",
-    "lede": "I built and scaled the multi-brand system behind Wawa's digital ecosystem: wawa.com, the ordering site and the native mobile app.",
-    "dek": "I built and scaled the multi-brand system behind Wawa's digital ecosystem: wawa.com, the ordering site and the native mobile app. Three surfaces on one component vocabulary, each keeping its voice.",
-    "clientFull": "Wawa, Inc.",
-    "role": "Lead: design systems",
-    "duration": "12 months",
-    "sections": [
-      {
-        "label": "The Brief",
-        "heading": "One system, three surfaces, one identity.",
-        "paras": [
-          "A design system is a contract you write with the future. Wawa's brief was to unify three digital surfaces (the marketing site, the ordering experience and the native mobile app) under one component vocabulary, without flattening the differences in voice that each surface actually needed.",
-          "The marketing site needed warmth. The ordering surface needed speed. The mobile app needed quiet competence under one hand at the gas pump. I led the system across all three: one pattern language, three registers, none of them losing the family resemblance."
-        ]
-      },
-      {
-        "label": "The Work",
-        "heading": "From brand to tokens to adoption.",
-        "paras": [
-          "I moved the work from the brand inward: analysing the existing identity, mapping the digital ecosystem, defining semantic tokens, building the component vocabulary and only then writing the documentation a team three months from now would actually read.",
-          "I spent the first weeks cataloguing what already existed: the brand colours that lived in print but not in tokens, the voice that worked on signage but not on a button, the patterns that were named \"Wawa\" but had never been written down. The audit became the first deliverable and the shared reference the rest of the engagement argued from.",
-          "I set the three-tier model: primitives at the root, semantic tokens on top, component primitives above those. The marketing site, the ordering site and the mobile app each pulled from the same root and composed their own semantic layer. Wawa's platform engineers built the pipeline that made that inheritance enforceable in code rather than in review. One source, three voices: by design."
-        ]
-      }
-    ],
-    "outcomes": [
-      {
-        "stat": "40+",
-        "label": "Components shipped: documented, annotated, each with an adoption note."
-      },
-      {
-        "stat": "17",
-        "label": "Surface tokens carrying the whole vocabulary: named by role, not by colour."
-      },
-      {
-        "stat": "3",
-        "label": "Surfaces on one component vocabulary: marketing, ordering, native app."
-      },
-      {
-        "stat": "1mo",
-        "label": "From handoff to the in-house team owning the system and shipping on it."
       }
     ]
   },
@@ -639,6 +505,12 @@ export const roles = [
     "org": "Circle K engagement",
     "years": "2025 / Present",
     "body": ""
+  },
+  {
+    "role": "Model evaluation and eval tooling",
+    "org": "Mercor · a frontier AI lab",
+    "years": "2024 / 2026",
+    "body": "Evaluating model output and designing the tooling evaluators work in. Engaged through Mercor; the lab is not named."
   },
   {
     "role": "Lead Experience Designer",

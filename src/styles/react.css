@@ -2555,3 +2555,66 @@ main > .inquiries { padding-bottom: var(--section-py); }
   background-image: none;
   margin-bottom: var(--sp-7);
 }
+
+/* ============================================================
+   §48. SECTIONS SEPARATE BY SPACE AND A MARK, NOT BY A LINE
+
+   Even softened, a full-width rule between every section made the
+   page read as a series of boxes. Sections are now divided by air
+   and a small centred mark: the printer's device a newspaper or a
+   book uses between movements. The rule only survives where it
+   genuinely separates list items from each other.
+
+   Space first: the section step grows so the mark has room to be a
+   pause rather than a decoration.
+   ============================================================ */
+:root { --sp-8: 148px; }
+@media (max-width: 900px) { :root { --sp-8: 104px; } }
+@media (max-width: 600px) { :root { --sp-8:  80px; } }
+
+/* The full-width section rules go. */
+main > .canvas.clients::after,
+main > .inquiries.canvas::before { content: none; }
+
+/* A diamond between two hairlines, sitting exactly on the boundary
+   between two sections, which is the midpoint of the gap because
+   both sides carry the same padding. Drawn as a mask so the colour
+   stays a token rather than being baked into the artwork. */
+main > .canvas + .canvas::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 92px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  background-color: var(--umber);
+  opacity: 0.62;
+  -webkit-mask: var(--motif) center / contain no-repeat;
+  mask: var(--motif) center / contain no-repeat;
+  pointer-events: none;
+}
+:root {
+  --motif: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 92 12'%3E%3Crect x='0' y='5.6' width='30' height='.8'/%3E%3Crect x='62' y='5.6' width='30' height='.8'/%3E%3Cpath d='M46 0 51 6 46 12 41 6Z'/%3E%3Ccircle cx='35.5' cy='6' r='1.1'/%3E%3Ccircle cx='56.5' cy='6' r='1.1'/%3E%3C/svg%3E");
+}
+
+/* The footer still wants a hard edge under the last section. */
+main > .inquiries.canvas { border-bottom: 0; }
+
+/* ============================================================
+   §49. THE CRITIQUE LOSES ITS INTERNAL RULES
+
+   Three horizontal lines around one quote: above the attribution,
+   below it, and under the controls. The quote already has its ochre
+   stem on the left; the rest was noise.
+   ============================================================ */
+.crit-stage .crit-author {
+  border-top: 0;
+  margin-top: var(--sp-5);
+  padding-top: 0;
+}
+.crit-controls {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: var(--sp-6);
+}
