@@ -47,7 +47,10 @@ const Home: React.FC = () => {
 
     {/* ---------------------------------------------- clients */}
     <section className="canvas clients">
-      <h2 className="clients-head">Brands I have worked with</h2>
+      <div className="clients-head-row">
+        <h2 className="clients-head">Brands I have worked with</h2>
+        <span className="range">Retail · AI · Healthcare · Apparel</span>
+      </div>
       <ul className="client-row">
         {clientMarks.map((c, i) => (
           <li key={c.name} style={{ '--i': i } as React.CSSProperties}>

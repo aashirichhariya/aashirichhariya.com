@@ -2618,3 +2618,121 @@ main > .inquiries.canvas { border-bottom: 0; }
   padding-top: 0;
   margin-top: var(--sp-6);
 }
+
+/* ============================================================
+   §50. THE BRAND BAND
+
+   It was a flush-left pile: seven marks at a fixed gap, ending two
+   hundred pixels short of the measure, under a heading with nothing
+   between them. Three corrections.
+
+   One, the heading takes the same shape as every other section
+   head on the site, a title with a line of apparatus opposite, so
+   the band is introduced rather than dropped in.
+
+   Two, the marks distribute across the full measure instead of
+   queueing at the left, and they sit on a fixed band height so the
+   row has a shape of its own rather than being as tall as whichever
+   logo happens to be tallest.
+
+   Three, optical weight. These are a filigree crest, two bold
+   wordmarks and four light ones; matching their heights made the
+   bold ones shout. Heights are retuned in content.ts and the two
+   extremes get an opacity correction here, because ink density is
+   not something a height can fix.
+   ============================================================ */
+.clients-head-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  width: 100%;
+  flex-wrap: wrap;
+}
+.clients { gap: var(--sp-7); }
+
+.client-row {
+  justify-content: space-between;
+  align-items: center;
+  min-height: 56px;
+  width: 100%;
+  gap: var(--sp-5);
+}
+
+.client-mark { opacity: 0.72; }
+/* The crest is fine line-work and reads faint at any size. */
+.client-mark[src*="publicisgroupe"] { opacity: 0.92; }
+/* These two are solid black wordmarks and carry further than the rest. */
+.client-mark[src*="wawa"],
+.client-mark[src*="pollin"] { opacity: 0.6; }
+
+@media (max-width: 900px) {
+  .client-row { justify-content: flex-start; gap: var(--sp-6); min-height: 48px; }
+  .clients { gap: var(--sp-6); }
+}
+
+/* ── Arriving ──
+   The band was fading in as one block while its marks also
+   staggered, two animations describing the same event. The block
+   reveal is dropped; only the marks move, one after another, each
+   finishing before it is read. Driven by scroll, so it is tied to
+   the reader rather than to a timer. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .clients { animation: none; }
+    .client-row li {
+      animation-name: mark-in;
+      animation-range: entry 6% entry calc(30% + (var(--i, 0) * 6%));
+    }
+  }
+}
+@keyframes mark-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* The apparatus rules are scoped to .section-head, so the band's
+   line rendered as plain sans. Same treatment, same tokens. */
+.clients-head-row .range {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--umber);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ============================================================
+   §51. WHY THE BRAND STAGGER NEVER PLAYED
+
+   `.client-row` carries overflow-x: auto so the band can scroll
+   sideways on a phone. That makes it a scroll container, and an
+   unnamed `view()` resolves its subject against the nearest
+   scrollport: each mark was being measured against the horizontal
+   scroller it sits in, where it is always fully visible, so
+   progress sat at 1 and nothing ever animated.
+
+   The section publishes a named view timeline instead. Names
+   resolve up the ancestor chain and this one is measured against
+   the document, so the marks are timed by the page scroll, which
+   is what was intended.
+
+   The sideways scroll is also now only declared where it is needed.
+   At full width the band distributes across the measure and has no
+   overflow to manage.
+   ============================================================ */
+.clients {
+  view-timeline-name: --brand-band;
+  view-timeline-axis: block;
+}
+.client-row { overflow-x: visible; }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .client-row li { animation-timeline: --brand-band; }
+  }
+}
+
+@media (max-width: 900px) {
+  .client-row { overflow-x: auto; }
+}

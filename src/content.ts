@@ -460,13 +460,13 @@ export const about: AboutBlock[] = [
    unreadable. The heights below are chosen so each mark occupies a
    similar area, which is what "the same size" means optically. */
 export const clientMarks = [
-  { name: 'Circle K',        src: '/logos/circlek.png',        h: 26 },
-  { name: 'Publicis Groupe', src: '/logos/publicisgroupe.png', h: 46 },
-  { name: 'lululemon',       src: '/logos/lululemon.png',      h: 19 },
-  { name: 'Wawa',            src: '/logos/wawa.png',           h: 40 },
-  { name: 'Pollin',          src: '/logos/pollin.png',         h: 26 },
-  { name: 'hungerhub',       src: '/logos/hungerhub.png',      h: 34 },
-  { name: 'Mercor',          src: '/logos/mercor.png',         h: 22 },
+  { name: 'Circle K',        src: '/logos/circlek.png',        h: 25 },
+  { name: 'Publicis Groupe', src: '/logos/publicisgroupe.png', h: 50 },
+  { name: 'lululemon',       src: '/logos/lululemon.png',      h: 20 },
+  { name: 'Wawa',            src: '/logos/wawa.png',           h: 33 },
+  { name: 'Pollin',          src: '/logos/pollin.png',         h: 23 },
+  { name: 'hungerhub',       src: '/logos/hungerhub.png',      h: 29 },
+  { name: 'Mercor',          src: '/logos/mercor.png',         h: 21 },
 ];
 
 /* Same mark, same optical height, wherever it is drawn. */
