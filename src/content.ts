@@ -43,7 +43,9 @@ export type Plate = {
     heading: string | null;
     paras: string[];
     bullets?: string[];
-    figures?: { src: string; alt: string; caption: string }[];
+    /* A figure is a still unless it carries `video`, in which case
+       `src` is its poster and the clip loops silently in its place. */
+    figures?: { src: string; alt: string; caption: string; video?: string; ratio?: string }[];
   }[];
   outcomes: { stat: string; label: string }[];
   /* One film per case at most, shown directly under the cover. */
@@ -108,7 +110,8 @@ export const plates: Plate[] = [
           {
             "src": "/case/coreai/cover.jpg",
             "alt": "The CoreAI v3 platform, across its surfaces",
-            "caption": "The v3 platform. One component vocabulary across seven product tracks."
+            "caption": "The v3 platform. One component vocabulary across seven product tracks.",
+            "ratio": "2000 / 1098"
           }
         ]
       },
@@ -145,17 +148,20 @@ export const plates: Plate[] = [
           {
             "src": "/case/coreai/block-container.jpg",
             "alt": "Block component setup",
-            "caption": "The block container. Every agent, task and tool lives inside one."
+            "caption": "The block container. Every agent, task and tool lives inside one.",
+            "ratio": "1800 / 1110"
           },
           {
             "src": "/case/coreai/build-mode.jpg",
             "alt": "Build Mode documentation",
-            "caption": "Build Mode. A no-code environment for composing agentic workflows."
+            "caption": "Build Mode. A no-code environment for composing agentic workflows.",
+            "ratio": "1800 / 1110"
           },
           {
             "src": "/case/coreai/run-mode.jpg",
             "alt": "Run Mode workflow",
-            "caption": "Run Mode. The surface most clients touched daily."
+            "caption": "Run Mode. The surface most clients touched daily.",
+            "ratio": "1800 / 1110"
           }
         ]
       },
@@ -174,7 +180,8 @@ export const plates: Plate[] = [
           {
             "src": "/case/coreai/context-plane.jpg",
             "alt": "Context Plane accessibility documentation",
-            "caption": "The Context Plane, with its accessibility specification."
+            "caption": "The Context Plane, with its accessibility specification.",
+            "ratio": "1800 / 1110"
           }
         ]
       },
@@ -196,7 +203,15 @@ export const plates: Plate[] = [
           {
             "src": "/case/coreai/block-spec.jpg",
             "alt": "Block container specification sheet",
-            "caption": "The written standard. What the component is and what it owes a user."
+            "caption": "The written standard. What the component is and what it owes a user.",
+            "ratio": "1800 / 975"
+          },
+          {
+            "src": "/case/coreai/cui-poster.jpg",
+            "video": "/case/coreai/cui.mp4",
+            "alt": "The CUI v3 component library, the voice orb and the chat shell.",
+            "caption": "CUI v3. The library, the voice surface and the chat shell composed from it.",
+            "ratio": "1180 / 1266"
           }
         ]
       }
@@ -267,6 +282,14 @@ export const plates: Plate[] = [
           "Fertility care is a slow emergency. Patients live inside a cycle that does not negotiate; clinicians live inside a schedule that does; the chart moves between them with the patience of a paper file in a hurry.",
           "Before I designed anything, I sat in the clinic. I went to cycles of clinical meetings, sat through mornings in the waiting area and heard the same conversation between a nurse and a patient three times before lunch. I watched where the chart got reopened. I watched what the clinician quietly retyped instead of correcting: the small, uncomplaining workaround that never appears in a requirements document and never gets raised in a workshop, because to the person doing it, it is simply Tuesday. Sitting still like that set the brief more accurately than the brief did.",
           "What it told me was that Pollin did not need a product. It needed one system serving two audiences across four surfaces: native iOS, native Android and responsive web for patients in active treatment and an EMR-integrated dashboard for the clinicians those patients depend on. On the patient side, medication timing, lab results, monitoring appointments and real emotional weight all converge on one interface. On the clinician side, the same underlying data has to feel as sharp as a surgical tray. My job was designing for coherence across all of it: holding both registers in one system and being the person accountable when they disagreed."
+        ],
+        "figures": [
+          {
+            "src": "/case/pollin/cover.jpg",
+            "alt": "Pollin on three phones: sign in, onboarding and the milestone list.",
+            "caption": "Pollin on three surfaces. Signing in, onboarding and the milestone list a patient lives in.",
+            "ratio": "1460 / 1209"
+          }
         ]
       },
       {
@@ -278,6 +301,22 @@ export const plates: Plate[] = [
           "I designed the clinician dashboard end to end: scheduling, test ordering, lab results, clinical reporting. The structure came from what I had watched in the clinic rather than from the workflow the org chart described: including the retyping, which I treated as a design defect rather than a training problem. Chart-prep time fell; double-entry between systems fell with it.",
           "The hardest design problem was at the join: where the clinician's order becomes the patient's notification, where the lab result returns to the dashboard, where a protocol change propagates to the cycle plan. I designed the seam between systems to be inspectable, not invisible. Clinicians could see what the patient had been shown; patients could see what the clinic had received. The integration engineers held me to what the EMR could actually guarantee and the design got more honest for it.",
           "I built and governed a centralised Figma system covering the patient apps, the web experience and the clinician dashboard: one source of truth, one component vocabulary. Components stayed shared where the meaning was shared (results, schedules, medications) and forked where the audiences diverged, in tone, density and escalation. Deciding which of those two things a given component was became the most useful conversation the design team had each week."
+        ],
+        "figures": [
+          {
+            "src": "/case/pollin/onboarding-poster.jpg",
+            "video": "/case/pollin/onboarding.mp4",
+            "alt": "The Pollin onboarding carousel, four screens.",
+            "caption": "Onboarding. Four screens, each naming one thing the app will carry for you.",
+            "ratio": "706 / 1530"
+          },
+          {
+            "src": "/case/pollin/splash-poster.jpg",
+            "video": "/case/pollin/splash.mp4",
+            "alt": "The Pollin launch screen, the mark settling.",
+            "caption": "The launch screen. The mark settles before the first frame of the app.",
+            "ratio": "748 / 1622"
+          }
         ]
       },
       {

@@ -2,11 +2,31 @@ import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Num, SectionTitle } from '../components/Type';
 import { plates, markHeight } from '../content';
+import type { Plate as PlateT } from '../content';
 import { CalendarIcon, LockIcon } from '../components/Icons';
 import PinGate, { isUnlocked } from '../components/PinGate';
+import Figure from '../components/Figure';
 
 /* The project page. Everything the index deliberately leaves out ends
    up here: the full standfirst, the engagement facts, and the prose. */
+
+/* Portrait figures that sit next to each other are paired into one
+   row. Anything else stands alone, at the full measure. */
+type Fig = NonNullable<PlateT['sections'][number]['figures']>[number];
+
+const isTall = (f: Fig) => {
+  if (!f.ratio) return false;
+  const [w, h] = f.ratio.split('/').map((n) => parseFloat(n));
+  return w > 0 && h > 0 && w / h < 0.8;
+};
+
+const groupFigures = (figs: Fig[]): Fig[][] =>
+  figs.reduce<Fig[][]>((rows, fig) => {
+    const last = rows[rows.length - 1];
+    if (last && last.length === 1 && isTall(fig) && isTall(last[0])) last.push(fig);
+    else rows.push([fig]);
+    return rows;
+  }, []);
 
 const PlatePage: React.FC = () => {
   const { id } = useParams();
@@ -142,12 +162,18 @@ const PlatePage: React.FC = () => {
               )}
             </div>
 
-            {sec.figures && sec.figures.map((fig) => (
-              <figure className="case-figure" key={fig.src}>
-                <img src={fig.src} alt={fig.alt} loading="lazy" decoding="async" />
-                <figcaption>{fig.caption}</figcaption>
-              </figure>
-            ))}
+            {sec.figures && groupFigures(sec.figures).map((group) =>
+              group.length > 1 ? (
+                /* Two phone screens stacked at the full measure run to
+                   three thousand pixels and read as two separate
+                   thoughts. Side by side they read as one. */
+                <div className="figure-pair" key={group[0].src}>
+                  {group.map((fig) => <Figure key={fig.src} {...fig} />)}
+                </div>
+              ) : (
+                <Figure key={group[0].src} {...group[0]} />
+              ),
+            )}
           </div>
         </section>
       ))}

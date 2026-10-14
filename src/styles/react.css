@@ -1943,7 +1943,7 @@ main > .inquiries { padding-bottom: var(--section-py); }
   margin: var(--sp-6) 0 0;
   grid-column: 1 / -1;
 }
-.case-figure img {
+.case-figure :is(img, video) {
   display: block;
   width: 100%;
   height: auto;
@@ -1994,7 +1994,7 @@ main > .inquiries { padding-bottom: var(--section-py); }
 }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .case-figure img {
+    .case-figure :is(img, video) {
       animation-name: figure-in;
       animation-duration: auto;
       animation-timing-function: linear;
@@ -2084,7 +2084,7 @@ main > .inquiries { padding-bottom: var(--section-py); }
 @media (max-width: 900px) { :root { --fig-bleed: 14px; } }
 @media (max-width: 600px) { :root { --fig-bleed: 8px; } }
 
-.case-figure img {
+.case-figure :is(img, video) {
   width: 100%;
   margin-inline: 0;
   transition:
@@ -2145,7 +2145,7 @@ main > .inquiries { padding-bottom: var(--section-py); }
 /* ============================================================
    §39. FIGURES: ROUNDED, AND SMALLER AT REST
    ============================================================ */
-.case-figure img {
+.case-figure :is(img, video) {
   border-radius: 6px;
   width: 78%;
 }
@@ -2157,7 +2157,7 @@ main > .inquiries { padding-bottom: var(--section-py); }
   }
 }
 @media (max-width: 900px) {
-  .case-figure img { width: 100%; }
+  .case-figure :is(img, video) { width: 100%; }
 }
 
 /* ============================================================
@@ -2851,4 +2851,73 @@ main > .inquiries.canvas { border-bottom: 0; }
 body {
   overflow-x: clip;
   overflow-y: visible;
+}
+
+/* ============================================================
+   §55. FIGURES THAT MOVE, AND FIGURES IN PAIRS
+
+   Some figures carry a clip rather than a still. They are the same
+   object as a still in every other respect, which is why the rules
+   above were widened to `:is(img, video)` rather than copied: one
+   set of sizing, one hover, one entrance.
+
+   What a video needs on top of that is a reserved box. A still
+   declares its own ratio through the file; a video does not until
+   its metadata arrives, so the page would settle, then jump. The
+   ratio comes from the content and is set inline.
+
+   The pair exists for phone screens. At the full measure a 706 by
+   1530 recording is a column of glass a metre tall, and two of them
+   are two separate visits. Side by side they are one comparison,
+   which is what they are.
+   ============================================================ */
+.case-figure video {
+  border-radius: 6px;
+  /* Nothing to click: it is muted, looping and decorative, and the
+     caption carries what it says. */
+  pointer-events: none;
+}
+
+.figure-pair {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-5);
+  align-items: start;
+  margin-block: var(--sp-6);
+}
+/* The row owns the rhythm, so the figures inside it do not also
+   carry one, and the second one must not cancel the bottom margin
+   the way a lone last figure does. */
+/* `.case-figure` claims `grid-column: 1 / -1` so it can break the
+   text measure in a section. Inside the pair's own grid that span
+   means both columns, which stacked the two at full width. */
+.figure-pair .case-figure { grid-column: auto; margin-block: 0; }
+
+/* Inside a pair the figure is already at its column width, and the
+   hover bleed would have the two overlap, so the bleed is dropped.
+
+   A phone at the full column runs past the fold, so you never see one
+   whole screen and its caption at the same time. The height is capped
+   instead and the width follows from the ratio, which keeps the two
+   the same height as each other whatever they were recorded at. */
+.figure-pair .case-figure :is(img, video) {
+  width: auto;
+  max-width: 100%;
+  max-height: 68vh;
+  margin-inline: auto;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .figure-pair .case-figure:hover :is(img, video) {
+    width: auto;
+    margin-inline: auto;
+    border-color: var(--petrol-line);
+  }
+}
+
+@media (max-width: 600px) {
+  .figure-pair {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-6);
+  }
 }
