@@ -2783,7 +2783,9 @@ main > .inquiries.canvas { border-bottom: 0; }
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1024 / 720;
+  /* The film's own ratio. It was cut to the app window, so this is
+     the window, not the recording's dead border. */
+  aspect-ratio: 1600 / 1138;
   background: var(--paper-deep);
   border: 1px solid var(--hairline);
   border-radius: 8px;
