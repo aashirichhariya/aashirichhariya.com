@@ -7,21 +7,25 @@ import Crits from '../components/Crits';
 import Typed from '../components/Typed';
 import { profile, plates, clientMarks, roster } from '../content';
 
-/* The hero's clock, the same numbers the stylesheet counts in. A line
-   lands every beat; the mark is cut first and the first line waits for
-   it. Kept here beside the stylesheet's --beat and --beat-1 because the
-   claim is timed in JavaScript and the lines around it in CSS, and the
-   two have to agree.
+/* The hero's clock, the same numbers the stylesheet counts in.
 
-   CLAIM_SPEED is the one to turn. At 19ms a character the line did not
-   type, it snapped, which is the opposite of what typing is for: the
-   point is that a sentence is being thought, and nobody thinks at 53
-   characters a second. At 50ms it is a shade slower than it can be
-   read, so the eye arrives at the full stop just after the hand does. */
+   The claim does not animate. It is the one sentence the page exists
+   to say, so it is simply there, from the first paint, and the lines
+   above it keep the wipe they have always had.
+
+   The features are the only thing written out, which is what makes it
+   one gesture rather than three competing ones. They are written at a
+   deliberate 35ms a character and started half a beat apart, so the
+   three cascade and overlap: slow enough to read as a hand writing,
+   short enough overall that the set is finished in under three
+   seconds rather than the eight that writing them end to end would
+   cost. FEATURE_SPEED and FEATURE_STAGGER are the two numbers to turn.
+*/
 const BEAT = 800;
 const LEAD = 1200;
-const CLAIM_IN = LEAD + BEAT * 2;
-const CLAIM_SPEED = 50;
+const FEATURE_IN = LEAD + BEAT * 2;
+const FEATURE_SPEED = 35;
+const FEATURE_STAGGER = BEAT / 2;
 
 const Home: React.FC = () => {
   const [gate, setGate] = useState<string | null>(null);
@@ -54,20 +58,25 @@ const Home: React.FC = () => {
             <span className="fp-role-sep" aria-hidden="true">·</span>
             <span className="fp-role-discipline">{profile.discipline}</span>
           </p>
-          {/* The claim types itself, then the three things it rests
-              on arrive as a set. */}
-          <Typed
-            className="fp-claim"
-            text={profile.claim}
-            delay={CLAIM_IN}
-            speed={CLAIM_SPEED}
-            once="hero-claim"
-          />
-          <ul className="fp-pillars">
-            {profile.pillars.map((p, i) => (
-              <li key={p.term} style={{ '--i': i } as React.CSSProperties}>
-                <span className="fp-pillar-term">{p.term}.</span>{' '}
-                <span className="fp-pillar-gloss">{p.gloss}</span>
+          {/* Always there. The page's one sentence does not need an
+              entrance. */}
+          <h2 className="fp-claim">{profile.claim}</h2>
+
+          {/* The features write themselves, half a beat apart. */}
+          <ul className="fp-features">
+            {profile.features.map((f, i) => (
+              <li key={f.term}>
+                <Typed
+                  as="div"
+                  className="fp-feature"
+                  once={`hero-feature-${i}`}
+                  delay={FEATURE_IN + i * FEATURE_STAGGER}
+                  speed={FEATURE_SPEED}
+                  parts={[
+                    { text: f.term, className: 'fp-feature-term' },
+                    { text: f.gloss, className: 'fp-feature-gloss' },
+                  ]}
+                />
               </li>
             ))}
           </ul>

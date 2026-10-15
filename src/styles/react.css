@@ -2925,40 +2925,39 @@ body {
 }
 
 /* ============================================================
-   §56. THE CLAIM, AND THE THREE THINGS UNDER IT
+   §56. THE CLAIM, AND THE FEATURES UNDER IT
 
    The hero carried one 24-word sentence with a colon in the middle:
    the promise and the three things that back it, run together, read
-   as a single grey line. It is now the claim as a heading and the
-   three as a list, each naming itself and then saying in plain words
-   what it gets you.
+   as a single grey line.
 
-   The claim types itself. `Typed` renders the finished line beneath
-   the typed one, hidden but holding its box, so nothing below it
-   moves while the characters land, and the heading carries the whole
-   sentence as its accessible name.
+   The claim is now a heading and it does not animate. It is the one
+   sentence the page exists to say, so it is there from the first
+   paint. An earlier version wrote it out instead, which meant the
+   first thing a visitor saw was an empty space where the point
+   should be.
 
-   The beat is the hero's own, counted from the same base as the two
-   lines above: the claim starts on beat 2 and has the rest of that
-   beat to finish (42 characters at 19ms is about 800ms), the list
-   arrives on beat 3, and the meridian follows on beat 4. The three
-   items are 120ms apart rather than a beat, because they are one
-   thought arriving, not three separate lines.
+   The three are features, so they are set as features: a name on its
+   own line and a line under it, not a bullet with a full stop in the
+   middle. They are the only thing on the page that writes itself,
+   which is what makes it one gesture rather than three competing
+   ones, and they start half a beat apart so the three cascade.
    ============================================================ */
 .typed {
   display: grid;
-  /* Both lines occupy the same cell: one holds the box, one is read. */
+  /* Both copies occupy one cell: one holds the box, one is written. */
   grid-template-areas: "line";
 }
 .typed > * {
   grid-area: line;
   min-width: 0;
 }
-/* Hidden, but still taking up its full height and width. */
+/* Hidden, but still taking up its full height and width, so nothing
+   below it moves while the characters land. */
 .typed-ghost { visibility: hidden; }
 
 .fp-claim {
-  margin: 0 0 var(--sp-4);
+  margin: 0 0 clamp(18px, 3.4svh, 34px);
   font-family: var(--serif);
   font-weight: 400;
   font-style: normal;
@@ -2971,11 +2970,11 @@ body {
 
 .typed-caret {
   display: inline-block;
-  width: 0.06em;
-  /* Sits on the text, not the line box, so it does not add height. */
-  height: 0.84em;
-  margin-left: 0.04em;
-  vertical-align: -0.08em;
+  width: 0.07em;
+  /* Sits on the text, not the line box, so it adds no height. */
+  height: 0.88em;
+  margin-left: 0.05em;
+  vertical-align: -0.1em;
   background: var(--ochre);
   animation: caret-blink 1180ms steps(1, end) infinite;
 }
@@ -2984,51 +2983,39 @@ body {
   63%, 99% { opacity: 0; }
 }
 
-.fp-pillars {
+/* ── The feature set ──
+   A rule, a name, a line. The rule is the hairline the rest of the
+   page divides with, not a bullet, because these are three items of
+   one list rather than three points in an argument. */
+.fp-features {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: clamp(7px, 1.1svh, 12px);
+  gap: clamp(13px, 2.1svh, 22px);
 }
-.fp-pillars li {
-  position: relative;
-  padding-left: 1.05em;
-  font-size: clamp(14px, min(1.42vw, 2.1svh), 18px);
-  line-height: 1.45;
+.fp-features li {
+  padding-top: clamp(9px, 1.4svh, 14px);
+  border-top: 1px solid var(--hairline);
+}
+.fp-feature-term {
+  display: block;
+  font-size: clamp(14px, min(1.42vw, 2.1svh), 17px);
+  line-height: 1.3;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+}
+.fp-feature-gloss {
+  display: block;
+  margin-top: 0.28em;
+  font-size: clamp(13px, min(1.26vw, 1.86svh), 15px);
+  line-height: 1.4;
   color: var(--umber);
   text-wrap: pretty;
-}
-/* The same short rule the case lists use, so a bullet here and a
-   bullet in a case study are the same mark. */
-.fp-pillars li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.68em;
-  width: 9px;
-  height: 1px;
-  background: var(--ochre);
-}
-.fp-pillar-term { color: var(--ink); }
-
-@media (prefers-reduced-motion: no-preference) {
-  .fp-claim {
-    /* The typing is the entrance; the box must not also be wiped,
-       or the characters land inside a closed clip. */
-    animation: none;
-  }
-  .fp-pillars li {
-    animation: line-cut 560ms cubic-bezier(0.16, 0.84, 0.26, 1)
-               calc(var(--beat-1) + var(--beat) * 5 + var(--i, 0) * 130ms) both;
-  }
-  .fp-meta {
-    animation: lift-in 700ms var(--curve)
-               calc(var(--beat-1) + var(--beat) * 6) both;
-  }
 }
 
 @media (max-width: 900px) {
   .fp-claim { font-size: clamp(19px, 4.6vw, 26px); }
-  .fp-pillars li { font-size: clamp(14px, 3.5vw, 16px); }
+  .fp-feature-term { font-size: clamp(14px, 3.7vw, 16px); }
+  .fp-feature-gloss { font-size: clamp(13px, 3.4vw, 15px); }
 }

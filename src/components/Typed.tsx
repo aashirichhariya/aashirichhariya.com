@@ -1,37 +1,41 @@
 import React, { useEffect, useState } from 'react';
 
-/* Text that types itself out.
+/* Text that writes itself out, one character at a time, across one or
+   more styled parts: a feature's name and its line are two spans but
+   one stream, so the caret runs straight from the end of the name into
+   the line beneath it.
 
-   Four things keep it from being the usual nuisance:
+   Five things keep it from being the usual nuisance:
 
-   - It does not move the page. The finished line is rendered
-     underneath, hidden but holding its box, so the layout is settled
-     from the first paint and nothing below shifts as characters land.
-   - It is read whole. The typing is decoration, so it is hidden from
-     assistive tech and the heading carries the finished sentence as
-     its accessible name. Nobody hears it stutter.
-   - It does not type at all under prefers-reduced-motion. The line is
-     simply there, which is the same sentence.
+   - It does not move the page. The finished text is rendered
+     underneath, hidden but holding its box, so every line below is in
+     its final position from the first paint.
+   - It is read whole. The writing is decoration, so it is hidden from
+     assistive tech and the element carries the finished text as its
+     accessible name. Nobody hears it stutter.
+   - The caret only exists while this one is being written. Before its
+     turn there is no caret, or three of them would blink at once.
+   - It does not write at all under prefers-reduced-motion.
    - It always finishes. The count is read from the clock rather than
-     incremented per tick, so a throttled timer makes it catch up
-     rather than crawl, and a tab that was in the background the whole
-     time arrives at a finished line instead of an empty one.
+     incremented per tick, so a throttled tab catches up rather than
+     crawling, and a tab left in the background arrives at finished
+     text instead of nothing. requestAnimationFrame would be the usual
+     driver and is the wrong one: a browser that is not painting never
+     runs it, and an earlier version of this sat at zero characters
+     with the line blank. */
 
-   requestAnimationFrame would be the usual driver and is the wrong one
-   here: a browser that is not painting does not run it, and the first
-   version of this sat at zero characters with the headline blank. A
-   timer is coarser and always fires. */
+export type Part = { text: string; className?: string };
 
 type Props = {
-  text: string;
+  parts: Part[];
   /* When the first character lands, in ms from mount. */
   delay: number;
   /* Milliseconds per character. */
   speed: number;
+  as?: 'div' | 'span' | 'h2';
   className?: string;
-  /* Types once a visit. Clicking the wordmark to come home should not
-     make someone sit through the sentence being written again; the
-     gesture is an introduction, and you are only introduced once. */
+  /* Writes once a visit. Coming back to the page should not make
+     someone sit through it being written again. */
   once?: string;
 };
 
@@ -41,7 +45,7 @@ const stillness = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* Storage throws in a private window and comes back empty with site
-   data cleared, so a failure here just means it types again. */
+   data cleared, so a failure here just means it writes again. */
 const seen = (key?: string) => {
   if (!key) return false;
   try {
@@ -55,46 +59,78 @@ const remember = (key?: string) => {
   try {
     window.sessionStorage.setItem('typed:' + key, '1');
   } catch {
-    /* nothing to do: it types again next time, which is not a fault */
+    /* nothing to do: it writes again next time, which is not a fault */
   }
 };
 
-const Typed: React.FC<Props> = ({ text, delay, speed, className, once }) => {
-  const [n, setN] = useState(() =>
-    stillness() || seen(once) ? text.length : 0,
-  );
+const Typed: React.FC<Props> = ({
+  parts,
+  delay,
+  speed,
+  as: Tag = 'div',
+  className,
+  once,
+}) => {
+  /* Spoken as one sentence: a feature's name, a full stop, its line. */
+  const whole = parts.map((p) => p.text).join('. ');
+  const total = parts.reduce((n, p) => n + p.text.length, 0);
+  const instant = stillness() || seen(once);
+
+  /* -1 is "not started": no characters and no caret either. */
+  const [n, setN] = useState(() => (instant ? total : -1));
 
   useEffect(() => {
-    if (stillness() || seen(once)) {
-      setN(text.length);
+    if (instant) {
+      setN(total);
       return;
     }
     const start = Date.now() + delay;
     const id = window.setInterval(() => {
-      const chars = Math.floor((Date.now() - start) / speed);
-      if (chars >= text.length) {
-        setN(text.length);
+      const elapsed = Date.now() - start;
+      if (elapsed < 0) return;
+      const chars = Math.floor(elapsed / speed);
+      if (chars >= total) {
+        setN(total);
         remember(once);
         window.clearInterval(id);
-      } else if (chars > 0) {
+      } else {
         setN(chars);
       }
     }, speed);
     return () => window.clearInterval(id);
-  }, [text, delay, speed, once]);
+  }, [total, delay, speed, once, instant]);
 
-  const typing = n < text.length;
+  const writing = n >= 0 && n < total;
+
+  /* Walk the parts, handing each the slice of the stream it owns. */
+  let taken = 0;
+  const written = parts.map((part, i) => {
+    const from = taken;
+    taken += part.text.length;
+    const shown = Math.max(0, Math.min(part.text.length, n - from));
+    /* The write head is in this part, so the caret belongs here. */
+    const head = n >= from && n < taken;
+    return (
+      <span className={part.className} key={i}>
+        {part.text.slice(0, shown)}
+        {writing && head && <span className="typed-caret" />}
+      </span>
+    );
+  });
 
   return (
-    <h2 className={`typed${className ? ' ' + className : ''}`} aria-label={text}>
+    <Tag className={`typed${className ? ' ' + className : ''}`} aria-label={whole}>
       <span className="typed-ghost" aria-hidden="true">
-        {text}
+        {parts.map((part, i) => (
+          <span className={part.className} key={i}>
+            {part.text}
+          </span>
+        ))}
       </span>
       <span className="typed-ink" aria-hidden="true">
-        {text.slice(0, n)}
-        {typing && <span className="typed-caret" />}
+        {written}
       </span>
-    </h2>
+    </Tag>
   );
 };
 

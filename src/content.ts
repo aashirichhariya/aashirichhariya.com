@@ -15,15 +15,15 @@ export const profile = {
      what the role actually does, in words a hiring manager uses. */
   role: "Principal Product Designer",
   discipline: "Design Systems",
-  /* The same sentence, said as a claim and three things rather than
-     one 24-word line with a colon in the middle. Each pillar names
-     itself, then says in plain words what it gets you: the "Name.
-     Clause." the figure captions already use. */
+  /* The claim stands. The three things it rests on are features, so
+     each is a name and a line, not a sentence with a colon in it.
+     The glosses are short because they are written out a character
+     at a time and nobody waits through a paragraph. */
   claim: "I design the systems other teams build on.",
-  pillars: [
-    { term: "Token architecture", gloss: "The decisions every product inherits." },
-    { term: "Multi-brand theming", gloss: "Many brands, one system beneath them." },
-    { term: "Governance at Fortune 500 scale", gloss: "What keeps it true as teams grow." },
+  features: [
+    { term: "Token architecture", gloss: "Decisions every product inherits." },
+    { term: "Multi-brand theming", gloss: "Many brands, one system." },
+    { term: "Governance at Fortune 500 scale", gloss: "What holds as teams grow." },
   ],
   /* The soft gate on the locked case studies. Change it here. */
   casePin: "2026",
