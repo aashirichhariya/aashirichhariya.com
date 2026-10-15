@@ -15,6 +15,10 @@ import React, { useEffect, useState } from 'react';
 
    The rest of it:
 
+   - It writes on every load. An earlier version remembered that it
+     had run and skipped it for the rest of the session, which meant
+     that after the first visit nobody ever saw it again, including
+     anyone reloading the page to look at it.
    - It is read whole. The writing is decoration, so the spans are
      hidden from assistive tech and the element carries the finished
      text as its accessible name. Nobody hears it stutter.
@@ -39,9 +43,6 @@ type Props = {
   speed: number;
   as?: 'div' | 'span' | 'h2';
   className?: string;
-  /* Writes once a visit. Coming back to the page should not make
-     someone sit through it being written again. */
-  once?: string;
 };
 
 const stillness = () =>
@@ -49,37 +50,17 @@ const stillness = () =>
   typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Storage throws in a private window and comes back empty with site
-   data cleared, so a failure here just means it writes again. */
-const seen = (key?: string) => {
-  if (!key) return false;
-  try {
-    return window.sessionStorage.getItem('typed:' + key) === '1';
-  } catch {
-    return false;
-  }
-};
-const remember = (key?: string) => {
-  if (!key) return;
-  try {
-    window.sessionStorage.setItem('typed:' + key, '1');
-  } catch {
-    /* nothing to do: it writes again next time, which is not a fault */
-  }
-};
-
 const Typed: React.FC<Props> = ({
   parts,
   delay,
   speed,
   as: Tag = 'div',
   className,
-  once,
 }) => {
   /* Spoken as one sentence: a feature's name, a full stop, its line. */
   const whole = parts.map((p) => p.text).join('. ');
   const total = parts.reduce((n, p) => n + p.text.length, 0);
-  const instant = stillness() || seen(once);
+  const instant = stillness();
 
   /* -1 is "not started": no characters and no caret either. */
   const [n, setN] = useState(() => (instant ? total : -1));
@@ -96,14 +77,13 @@ const Typed: React.FC<Props> = ({
       const chars = Math.floor(elapsed / speed);
       if (chars >= total) {
         setN(total);
-        remember(once);
         window.clearInterval(id);
       } else {
         setN(chars);
       }
     }, speed);
     return () => window.clearInterval(id);
-  }, [total, delay, speed, once, instant]);
+  }, [total, delay, speed, instant]);
 
   const writing = n >= 0 && n < total;
 
@@ -122,11 +102,14 @@ const Typed: React.FC<Props> = ({
         const head = n >= from && n < taken;
         const rest = part.text.slice(shown);
         return (
-          <span className={part.className} key={i} aria-hidden="true">
+          <React.Fragment key={i}>
+            {i > 0 && ' '}
+          <span className={part.className} aria-hidden="true">
             {part.text.slice(0, shown)}
             {writing && head && <span className="typed-caret" />}
             {rest && <span className="typed-rest">{rest}</span>}
           </span>
+          </React.Fragment>
         );
       })}
     </Tag>

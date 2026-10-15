@@ -53,7 +53,6 @@ const Home: React.FC = () => {
           <Typed
             as="h2"
             className="fp-claim"
-            once="hero-claim"
             delay={CLAIM_IN}
             speed={SPEED}
             parts={[{ text: profile.claim }]}
@@ -66,7 +65,6 @@ const Home: React.FC = () => {
                 <Typed
                   as="div"
                   className="fp-feature"
-                  once={`hero-feature-${i}`}
                   delay={FEATURE_IN + i * FEATURE_STAGGER}
                   speed={SPEED}
                   parts={[
