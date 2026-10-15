@@ -2943,18 +2943,15 @@ body {
    which is what makes it one gesture rather than three competing
    ones, and they start half a beat apart so the three cascade.
    ============================================================ */
-.typed {
-  display: grid;
-  /* Both copies occupy one cell: one holds the box, one is written. */
-  grid-template-areas: "line";
+/* The characters not yet written. They hold their space, so the box
+   is its final size from the first paint and nothing below moves as
+   the line fills in, but they are not painted, not selectable and
+   not in the accessibility tree. One copy of the text, not two. */
+.typed-rest {
+  visibility: hidden;
+  -webkit-user-select: none;
+  user-select: none;
 }
-.typed > * {
-  grid-area: line;
-  min-width: 0;
-}
-/* Hidden, but still taking up its full height and width, so nothing
-   below it moves while the characters land. */
-.typed-ghost { visibility: hidden; }
 
 .fp-claim {
   margin: 0 0 clamp(18px, 3.4svh, 34px);

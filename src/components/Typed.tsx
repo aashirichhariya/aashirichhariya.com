@@ -5,24 +5,29 @@ import React, { useEffect, useState } from 'react';
    one stream, so the caret runs straight from the end of the name into
    the line beneath it.
 
-   Five things keep it from being the usual nuisance:
+   The text is in the document once. An earlier version held two
+   copies, a hidden one to reserve the box and a growing one on top,
+   which meant selecting the page copied everything twice and ran the
+   name into its line. Here the characters that have not been written
+   yet are simply hidden: they still occupy their space, so the box is
+   its final size from the first paint and nothing below ever moves,
+   but there is only one of each word in the page.
 
-   - It does not move the page. The finished text is rendered
-     underneath, hidden but holding its box, so every line below is in
-     its final position from the first paint.
-   - It is read whole. The writing is decoration, so it is hidden from
-     assistive tech and the element carries the finished text as its
-     accessible name. Nobody hears it stutter.
+   The rest of it:
+
+   - It is read whole. The writing is decoration, so the spans are
+     hidden from assistive tech and the element carries the finished
+     text as its accessible name. Nobody hears it stutter.
    - The caret only exists while this one is being written. Before its
-     turn there is no caret, or three of them would blink at once.
+     turn there is no caret, or three would blink at once.
    - It does not write at all under prefers-reduced-motion.
    - It always finishes. The count is read from the clock rather than
      incremented per tick, so a throttled tab catches up rather than
      crawling, and a tab left in the background arrives at finished
      text instead of nothing. requestAnimationFrame would be the usual
      driver and is the wrong one: a browser that is not painting never
-     runs it, and an earlier version of this sat at zero characters
-     with the line blank. */
+     runs it, and an earlier version sat at zero characters with the
+     line blank. */
 
 export type Part = { text: string; className?: string };
 
@@ -104,32 +109,26 @@ const Typed: React.FC<Props> = ({
 
   /* Walk the parts, handing each the slice of the stream it owns. */
   let taken = 0;
-  const written = parts.map((part, i) => {
-    const from = taken;
-    taken += part.text.length;
-    const shown = Math.max(0, Math.min(part.text.length, n - from));
-    /* The write head is in this part, so the caret belongs here. */
-    const head = n >= from && n < taken;
-    return (
-      <span className={part.className} key={i}>
-        {part.text.slice(0, shown)}
-        {writing && head && <span className="typed-caret" />}
-      </span>
-    );
-  });
 
   return (
     <Tag className={`typed${className ? ' ' + className : ''}`} aria-label={whole}>
-      <span className="typed-ghost" aria-hidden="true">
-        {parts.map((part, i) => (
-          <span className={part.className} key={i}>
-            {part.text}
+      {parts.map((part, i) => {
+        const from = taken;
+        taken += part.text.length;
+        const shown = instant
+          ? part.text.length
+          : Math.max(0, Math.min(part.text.length, n - from));
+        /* The write head is in this part, so the caret belongs here. */
+        const head = n >= from && n < taken;
+        const rest = part.text.slice(shown);
+        return (
+          <span className={part.className} key={i} aria-hidden="true">
+            {part.text.slice(0, shown)}
+            {writing && head && <span className="typed-caret" />}
+            {rest && <span className="typed-rest">{rest}</span>}
           </span>
-        ))}
-      </span>
-      <span className="typed-ink" aria-hidden="true">
-        {written}
-      </span>
+        );
+      })}
     </Tag>
   );
 };
