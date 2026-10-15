@@ -24,6 +24,9 @@ import React, { useEffect, useState } from 'react';
      text as its accessible name. Nobody hears it stutter.
    - The caret only exists while this one is being written. Before its
      turn there is no caret, or three would blink at once.
+   - It says whether it has started, as data-started, so whatever
+     frames it (a rule above a feature, say) can arrive with the first
+     character instead of sitting there announcing an empty space.
    - It does not write at all under prefers-reduced-motion.
    - It always finishes. The count is read from the clock rather than
      incremented per tick, so a throttled tab catches up rather than
@@ -86,12 +89,17 @@ const Typed: React.FC<Props> = ({
   }, [total, delay, speed, instant]);
 
   const writing = n >= 0 && n < total;
+  const started = instant || n >= 0;
 
   /* Walk the parts, handing each the slice of the stream it owns. */
   let taken = 0;
 
   return (
-    <Tag className={`typed${className ? ' ' + className : ''}`} aria-label={whole}>
+    <Tag
+      className={`typed${className ? ' ' + className : ''}`}
+      data-started={started ? 'true' : 'false'}
+      aria-label={whole}
+    >
       {parts.map((part, i) => {
         const from = taken;
         taken += part.text.length;

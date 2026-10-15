@@ -10,13 +10,17 @@ import { profile, plates, clientMarks, roster } from '../content';
 /* The hero's clock. Everything in the right column is written out,
    one character after another: the claim first, then the three
    features, which start a third of a beat apart so they cascade
-   rather than queue. One speed throughout. */
+   rather than queue. One speed throughout.
+
+   The features wait on the claim, so their start is measured from how
+   long the claim actually takes to write. Reading that from the text
+   itself rather than a number typed in here means editing the claim
+   cannot quietly put the two out of step. */
 const BEAT = 800;
 const LEAD = 800;
-const CLAIM_IN = LEAD + BEAT * 2;
 const SPEED = 30;
-const CLAIM_CHARS = 42;
-const FEATURE_IN = CLAIM_IN + CLAIM_CHARS * SPEED + 180;
+const CLAIM_IN = LEAD + BEAT * 2;
+const FEATURE_IN = CLAIM_IN + profile.claim.length * SPEED + 180;
 const FEATURE_STAGGER = 280;
 
 const Home: React.FC = () => {
@@ -44,7 +48,7 @@ const Home: React.FC = () => {
 
         <div className="fp-right">
           {/* Two beats, not one line: the title lands, then the
-              discipline, then the claim. */}
+              discipline, then the claim begins to write. */}
           <p className="fp-role">
             <span className="fp-role-title">{profile.role}</span>
             <span className="fp-role-sep" aria-hidden="true">·</span>
@@ -58,7 +62,7 @@ const Home: React.FC = () => {
             parts={[{ text: profile.claim }]}
           />
 
-          {/* The features write themselves, half a beat apart. */}
+          {/* The features write themselves, a third of a beat apart. */}
           <ul className="fp-features">
             {profile.features.map((f, i) => (
               <li key={f.term}>
