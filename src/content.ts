@@ -15,7 +15,16 @@ export const profile = {
      what the role actually does, in words a hiring manager uses. */
   role: "Principal Product Designer",
   discipline: "Design Systems",
-  tagline: "I design the systems other teams build on: token architecture, multi-brand theming and the governance that holds them together at Fortune 500 scale.",
+  /* The same sentence, said as a claim and three things rather than
+     one 24-word line with a colon in the middle. Each pillar names
+     itself, then says in plain words what it gets you: the "Name.
+     Clause." the figure captions already use. */
+  claim: "I design the systems other teams build on.",
+  pillars: [
+    { term: "Token architecture", gloss: "The decisions every product inherits." },
+    { term: "Multi-brand theming", gloss: "Many brands, one system beneath them." },
+    { term: "Governance at Fortune 500 scale", gloss: "What keeps it true as teams grow." },
+  ],
   /* The soft gate on the locked case studies. Change it here. */
   casePin: "2026",
   scope: "50+ designers \u00b7 7 product tracks \u00b7 4 brands",

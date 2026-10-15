@@ -4,7 +4,24 @@ import Contact from '../components/Contact';
 import { Num, SectionTitle } from '../components/Type';
 import PinGate, { isUnlocked } from '../components/PinGate';
 import Crits from '../components/Crits';
+import Typed from '../components/Typed';
 import { profile, plates, clientMarks, roster } from '../content';
+
+/* The hero's clock, the same numbers the stylesheet counts in. A line
+   lands every beat; the mark is cut first and the first line waits for
+   it. Kept here beside the stylesheet's --beat and --beat-1 because the
+   claim is timed in JavaScript and the lines around it in CSS, and the
+   two have to agree.
+
+   CLAIM_SPEED is the one to turn. At 19ms a character the line did not
+   type, it snapped, which is the opposite of what typing is for: the
+   point is that a sentence is being thought, and nobody thinks at 53
+   characters a second. At 50ms it is a shade slower than it can be
+   read, so the eye arrives at the full stop just after the hand does. */
+const BEAT = 800;
+const LEAD = 1200;
+const CLAIM_IN = LEAD + BEAT * 2;
+const CLAIM_SPEED = 50;
 
 const Home: React.FC = () => {
   const [gate, setGate] = useState<string | null>(null);
@@ -31,16 +48,29 @@ const Home: React.FC = () => {
 
         <div className="fp-right">
           {/* Two beats, not one line: the title lands, then the
-              discipline, then the paragraph. */}
+              discipline, then the claim. */}
           <p className="fp-role">
             <span className="fp-role-title">{profile.role}</span>
             <span className="fp-role-sep" aria-hidden="true">·</span>
             <span className="fp-role-discipline">{profile.discipline}</span>
           </p>
-          <p className="tagline">
-            <em>I design the systems other teams build on:</em>{' '}
-            {profile.tagline.replace('I design the systems other teams build on: ', '')}
-          </p>
+          {/* The claim types itself, then the three things it rests
+              on arrive as a set. */}
+          <Typed
+            className="fp-claim"
+            text={profile.claim}
+            delay={CLAIM_IN}
+            speed={CLAIM_SPEED}
+            once="hero-claim"
+          />
+          <ul className="fp-pillars">
+            {profile.pillars.map((p, i) => (
+              <li key={p.term} style={{ '--i': i } as React.CSSProperties}>
+                <span className="fp-pillar-term">{p.term}.</span>{' '}
+                <span className="fp-pillar-gloss">{p.gloss}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

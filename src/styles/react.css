@@ -2923,3 +2923,112 @@ body {
     gap: var(--sp-6);
   }
 }
+
+/* ============================================================
+   §56. THE CLAIM, AND THE THREE THINGS UNDER IT
+
+   The hero carried one 24-word sentence with a colon in the middle:
+   the promise and the three things that back it, run together, read
+   as a single grey line. It is now the claim as a heading and the
+   three as a list, each naming itself and then saying in plain words
+   what it gets you.
+
+   The claim types itself. `Typed` renders the finished line beneath
+   the typed one, hidden but holding its box, so nothing below it
+   moves while the characters land, and the heading carries the whole
+   sentence as its accessible name.
+
+   The beat is the hero's own, counted from the same base as the two
+   lines above: the claim starts on beat 2 and has the rest of that
+   beat to finish (42 characters at 19ms is about 800ms), the list
+   arrives on beat 3, and the meridian follows on beat 4. The three
+   items are 120ms apart rather than a beat, because they are one
+   thought arriving, not three separate lines.
+   ============================================================ */
+.typed {
+  display: grid;
+  /* Both lines occupy the same cell: one holds the box, one is read. */
+  grid-template-areas: "line";
+}
+.typed > * {
+  grid-area: line;
+  min-width: 0;
+}
+/* Hidden, but still taking up its full height and width. */
+.typed-ghost { visibility: hidden; }
+
+.fp-claim {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(19px, min(2.3vw, 3.4svh), 31px);
+  line-height: 1.26;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.typed-caret {
+  display: inline-block;
+  width: 0.06em;
+  /* Sits on the text, not the line box, so it does not add height. */
+  height: 0.84em;
+  margin-left: 0.04em;
+  vertical-align: -0.08em;
+  background: var(--ochre);
+  animation: caret-blink 1180ms steps(1, end) infinite;
+}
+@keyframes caret-blink {
+  0%, 62%  { opacity: 1; }
+  63%, 99% { opacity: 0; }
+}
+
+.fp-pillars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(7px, 1.1svh, 12px);
+}
+.fp-pillars li {
+  position: relative;
+  padding-left: 1.05em;
+  font-size: clamp(14px, min(1.42vw, 2.1svh), 18px);
+  line-height: 1.45;
+  color: var(--umber);
+  text-wrap: pretty;
+}
+/* The same short rule the case lists use, so a bullet here and a
+   bullet in a case study are the same mark. */
+.fp-pillars li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 9px;
+  height: 1px;
+  background: var(--ochre);
+}
+.fp-pillar-term { color: var(--ink); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .fp-claim {
+    /* The typing is the entrance; the box must not also be wiped,
+       or the characters land inside a closed clip. */
+    animation: none;
+  }
+  .fp-pillars li {
+    animation: line-cut 560ms cubic-bezier(0.16, 0.84, 0.26, 1)
+               calc(var(--beat-1) + var(--beat) * 5 + var(--i, 0) * 130ms) both;
+  }
+  .fp-meta {
+    animation: lift-in 700ms var(--curve)
+               calc(var(--beat-1) + var(--beat) * 6) both;
+  }
+}
+
+@media (max-width: 900px) {
+  .fp-claim { font-size: clamp(19px, 4.6vw, 26px); }
+  .fp-pillars li { font-size: clamp(14px, 3.5vw, 16px); }
+}
