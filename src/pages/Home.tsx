@@ -11,23 +11,29 @@ import { profile, plates, clientMarks, roster } from '../content';
 
    The whole right-hand column is written out, one character after
    another, in the order it is read: the role, then the claim, then
-   the three features a third of a beat apart so they cascade rather
-   than queue. One speed throughout, and one gesture, which is the
-   point: the role used to wipe open while everything under it was
-   written.
+   each feature. One at a time, strictly: a line does not begin until
+   the line before it is finished. They used to start a third of a
+   beat apart and overlap, so three carets ran at once and the set
+   read as a scramble rather than a list being written.
 
-   Each line waits on the length of the one before it, counted from
-   the text itself, so editing any of the copy cannot quietly put the
-   sequence out of step. */
-const BEAT = 800;
-const SPEED = 30;
-const PAUSE = 180;
+   Every start is measured from the length of the text before it, so
+   editing any of the copy keeps the sequence in step by itself.
+
+   SPEED and PAUSE are the two numbers to turn. */
+const SPEED = 26;
+const PAUSE = 150;
+const LEAD = 400;
 
 const roleText = profile.role + '·' + profile.discipline;
-const ROLE_IN = BEAT;
+const ROLE_IN = LEAD;
 const CLAIM_IN = ROLE_IN + roleText.length * SPEED + PAUSE;
-const FEATURE_IN = CLAIM_IN + profile.claim.length * SPEED + PAUSE;
-const FEATURE_STAGGER = 280;
+
+/* Each feature waits for the one before it to finish. */
+const FEATURE_IN: number[] = [];
+profile.features.reduce((at, f) => {
+  FEATURE_IN.push(at);
+  return at + (f.term.length + f.gloss.length) * SPEED + PAUSE;
+}, CLAIM_IN + profile.claim.length * SPEED + PAUSE);
 
 const Home: React.FC = () => {
   const [gate, setGate] = useState<string | null>(null);
@@ -75,14 +81,14 @@ const Home: React.FC = () => {
             parts={[{ text: profile.claim }]}
           />
 
-          {/* The features write themselves, a third of a beat apart. */}
+          {/* Each feature begins when the one above it is finished. */}
           <ul className="fp-features">
             {profile.features.map((f, i) => (
               <li key={f.term}>
                 <Typed
                   as="div"
                   className="fp-feature"
-                  delay={FEATURE_IN + i * FEATURE_STAGGER}
+                  delay={FEATURE_IN[i]}
                   speed={SPEED}
                   parts={[
                     { text: f.term, className: 'fp-feature-term' },

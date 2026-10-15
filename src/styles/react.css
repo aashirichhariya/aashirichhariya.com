@@ -2991,16 +2991,33 @@ body {
   gap: clamp(13px, 2.1svh, 22px);
 }
 /* The rule belongs to the written element, not the list item, so it
-   can be told whether its text has started. Visible is the base
-   state: if the script never runs there is no attribute and the set
-   reads as a plain list, rather than three invisible rules. */
+   can be told whether its text has started, and it is drawn rather
+   than faded: it runs out from the left in the same direction the
+   characters do, which is the same gesture the section rules use.
+
+   Drawn is the base state: if the script never runs there is no
+   attribute and the set reads as a plain list rather than three
+   invisible rules. */
 .fp-feature {
+  position: relative;
   padding-top: clamp(9px, 1.4svh, 14px);
-  border-top: 1px solid var(--hairline);
+}
+.fp-feature::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--hairline);
+  transform-origin: left center;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .fp-feature { transition: border-top-color 420ms var(--curve); }
-  .fp-feature[data-started='false'] { border-top-color: transparent; }
+  .fp-feature::before {
+    transform: scaleX(0);
+    transition: transform 420ms var(--curve);
+  }
+  .fp-feature[data-started='true']::before { transform: scaleX(1); }
 }
 .fp-feature-term {
   display: block;
