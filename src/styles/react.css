@@ -1900,15 +1900,14 @@ main > .inquiries { padding-bottom: var(--section-py); }
 @media (prefers-reduced-motion: no-preference) {
   .frontispiece .name { animation-duration: 2200ms; animation-delay: 120ms; }
 
-  .fp-role { animation: none; }
-  .fp-role-title {
-    animation: line-cut 700ms cubic-bezier(0.16,0.84,0.26,1) var(--beat-1) both;
-  }
+  /* The role is written out a character at a time now, in the same
+     stream as the claim below it, so it must not also be wiped open:
+     the characters would land inside a closed clip. */
+  .fp-role,
+  .fp-role-title,
   .fp-role-sep,
-  .fp-role-discipline {
-    animation: line-cut 700ms cubic-bezier(0.16,0.84,0.26,1)
-               calc(var(--beat-1) + var(--beat)) both;
-  }
+  .fp-role-discipline { animation: none; }
+
   .tagline {
     animation: line-cut 700ms cubic-bezier(0.16,0.84,0.26,1)
                calc(var(--beat-1) + var(--beat) * 2) both;

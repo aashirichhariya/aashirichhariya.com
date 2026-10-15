@@ -7,20 +7,26 @@ import Crits from '../components/Crits';
 import Typed from '../components/Typed';
 import { profile, plates, clientMarks, roster } from '../content';
 
-/* The hero's clock. Everything in the right column is written out,
-   one character after another: the claim first, then the three
-   features, which start a third of a beat apart so they cascade
-   rather than queue. One speed throughout.
+/* The hero's clock.
 
-   The features wait on the claim, so their start is measured from how
-   long the claim actually takes to write. Reading that from the text
-   itself rather than a number typed in here means editing the claim
-   cannot quietly put the two out of step. */
+   The whole right-hand column is written out, one character after
+   another, in the order it is read: the role, then the claim, then
+   the three features a third of a beat apart so they cascade rather
+   than queue. One speed throughout, and one gesture, which is the
+   point: the role used to wipe open while everything under it was
+   written.
+
+   Each line waits on the length of the one before it, counted from
+   the text itself, so editing any of the copy cannot quietly put the
+   sequence out of step. */
 const BEAT = 800;
-const LEAD = 800;
 const SPEED = 30;
-const CLAIM_IN = LEAD + BEAT * 2;
-const FEATURE_IN = CLAIM_IN + profile.claim.length * SPEED + 180;
+const PAUSE = 180;
+
+const roleText = profile.role + '·' + profile.discipline;
+const ROLE_IN = BEAT;
+const CLAIM_IN = ROLE_IN + roleText.length * SPEED + PAUSE;
+const FEATURE_IN = CLAIM_IN + profile.claim.length * SPEED + PAUSE;
 const FEATURE_STAGGER = 280;
 
 const Home: React.FC = () => {
@@ -47,13 +53,20 @@ const Home: React.FC = () => {
         </div>
 
         <div className="fp-right">
-          {/* Two beats, not one line: the title lands, then the
-              discipline, then the claim begins to write. */}
-          <p className="fp-role">
-            <span className="fp-role-title">{profile.role}</span>
-            <span className="fp-role-sep" aria-hidden="true">·</span>
-            <span className="fp-role-discipline">{profile.discipline}</span>
-          </p>
+          {/* The role is written out too. It used to wipe open while
+              everything under it was written, which is two gestures
+              for one column. */}
+          <Typed
+            as="div"
+            className="fp-role"
+            delay={ROLE_IN}
+            speed={SPEED}
+            parts={[
+              { text: profile.role, className: 'fp-role-title' },
+              { text: '·', className: 'fp-role-sep' },
+              { text: profile.discipline, className: 'fp-role-discipline' },
+            ]}
+          />
           <Typed
             as="h2"
             className="fp-claim"
