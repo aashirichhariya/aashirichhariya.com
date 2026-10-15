@@ -1894,8 +1894,8 @@ main > .inquiries { padding-bottom: var(--section-py); }
    reads as a rhythm. Each line also finishes inside its own beat
    (700ms < 800ms), so no two are ever moving at once. */
 :root {
-  --beat:  800ms;   /* the gap between lines  */
-  --beat-1: 1200ms; /* when the first line lands, after the mark */
+  --beat:  800ms;  /* the gap between lines */
+  --beat-1: 800ms; /* when the first line lands, after the mark */
 }
 @media (prefers-reduced-motion: no-preference) {
   .frontispiece .name { animation-duration: 2200ms; animation-delay: 120ms; }

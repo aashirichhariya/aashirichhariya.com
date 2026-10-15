@@ -7,25 +7,17 @@ import Crits from '../components/Crits';
 import Typed from '../components/Typed';
 import { profile, plates, clientMarks, roster } from '../content';
 
-/* The hero's clock, the same numbers the stylesheet counts in.
-
-   The claim does not animate. It is the one sentence the page exists
-   to say, so it is simply there, from the first paint, and the lines
-   above it keep the wipe they have always had.
-
-   The features are the only thing written out, which is what makes it
-   one gesture rather than three competing ones. They are written at a
-   deliberate 35ms a character and started half a beat apart, so the
-   three cascade and overlap: slow enough to read as a hand writing,
-   short enough overall that the set is finished in under three
-   seconds rather than the eight that writing them end to end would
-   cost. FEATURE_SPEED and FEATURE_STAGGER are the two numbers to turn.
-*/
+/* The hero's clock. Everything in the right column is written out,
+   one character after another: the claim first, then the three
+   features, which start a third of a beat apart so they cascade
+   rather than queue. One speed throughout. */
 const BEAT = 800;
-const LEAD = 1200;
-const FEATURE_IN = LEAD + BEAT * 2;
-const FEATURE_SPEED = 35;
-const FEATURE_STAGGER = BEAT / 2;
+const LEAD = 800;
+const CLAIM_IN = LEAD + BEAT * 2;
+const SPEED = 30;
+const CLAIM_CHARS = 42;
+const FEATURE_IN = CLAIM_IN + CLAIM_CHARS * SPEED + 180;
+const FEATURE_STAGGER = 280;
 
 const Home: React.FC = () => {
   const [gate, setGate] = useState<string | null>(null);
@@ -58,9 +50,14 @@ const Home: React.FC = () => {
             <span className="fp-role-sep" aria-hidden="true">·</span>
             <span className="fp-role-discipline">{profile.discipline}</span>
           </p>
-          {/* Always there. The page's one sentence does not need an
-              entrance. */}
-          <h2 className="fp-claim">{profile.claim}</h2>
+          <Typed
+            as="h2"
+            className="fp-claim"
+            once="hero-claim"
+            delay={CLAIM_IN}
+            speed={SPEED}
+            parts={[{ text: profile.claim }]}
+          />
 
           {/* The features write themselves, half a beat apart. */}
           <ul className="fp-features">
@@ -71,7 +68,7 @@ const Home: React.FC = () => {
                   className="fp-feature"
                   once={`hero-feature-${i}`}
                   delay={FEATURE_IN + i * FEATURE_STAGGER}
-                  speed={FEATURE_SPEED}
+                  speed={SPEED}
                   parts={[
                     { text: f.term, className: 'fp-feature-term' },
                     { text: f.gloss, className: 'fp-feature-gloss' },
